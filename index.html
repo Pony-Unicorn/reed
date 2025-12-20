@@ -36,16 +36,33 @@
       name="twitter:description"
       content="By encrypting one end to generate a QR code and scanning the code to decrypt it on the other end, point-to-point secure transmission without the need for a network or a transfer server is achieved."
     />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
     <!-- Performance -->
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/apple-touch-icon.png"
+    />
 
     <style>
       /* ========================================
@@ -620,7 +637,11 @@
     <header class="app-header">
       <div class="container">
         <div class="flex items-center gap-md">
-          <img src="logo.png" alt="Reed Logo" class="logo" />
+          <img
+            src="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/logo.png"
+            alt="Reed Logo"
+            class="logo"
+          />
           <div>
             <h1 class="text-2xl font-bold">Reed</h1>
             <p class="text-sm" style="color: var(--neutral-500)">
@@ -680,7 +701,7 @@
                 id="downloadBtn"
                 style="display: none"
               >
-                💾 下载二维码
+                💾 下载
               </button>
               <button
                 class="btn btn-neutral-outline btn-sm"
@@ -751,13 +772,13 @@
                   class="btn btn-primary-soft btn-sm"
                   onclick="copyResult()"
                 >
-                  📋 复制内容
+                  📋 复制
                 </button>
                 <button
                   class="btn btn-neutral-outline btn-sm"
                   onclick="resetScanner()"
                 >
-                  🔄 再次扫描
+                  🔄 重扫
                 </button>
               </div>
             </div>
