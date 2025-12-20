@@ -5,6 +5,8 @@
 一个用于安全传输密码、私钥、助记词等敏感信息的工具。
 通过一端加密生成二维码，另一端扫码解密的方式，实现无需网络、无需中转服务器的点对点安全传输。
 
+🌐 **在线访问**: https://reed.testbug.cc
+
 ---
 
 ## 🚀 功能特性
@@ -40,15 +42,15 @@
 ## Todo List
 
 - 优化扫码区域
-- 输入分区
+- 不要出现 style="margin: 0" 这样的内联样式
 - 生成二维码优化
 - 长度限制
 - faq（放到底部）：关于、教程、如何保证安全、联系方式等
-- 提高安全性
+- 提高安全性（输入输出分区，待定，需调研）
 - 第二版
+  - https://developer.mozilla.org/zh-CN/docs/Web/HTML/Reference/Elements/input/checkbox
   - WebCrypto 加密、解密消息
   - 优化 https://github.com/soldair/node-qrcode fork 精简
-  - 使用图片缩放，增加识别精准度 https://fengyuanchen.github.io/cropperjs/zh/
 
 ---
 
@@ -61,7 +63,7 @@
 ## 🙏 致谢
 
 - [qrcode](https://github.com/soldair/node-qrcode/) - 生成二维码
-- [jsQR](https://github.com/cozmo/jsQR/) - 二维码读取
+- [jsQR](https://github.com/cozmo/jsQR/) - 二维码识别
 - [Cloudflare Page](https://developers.cloudflare.com/pages/) - Cloudflare Pages 托管
 
 ---

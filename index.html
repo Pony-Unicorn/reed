@@ -501,8 +501,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 280px;
-        padding: var(--spacing-lg);
+        min-height: 256px;
         background-color: var(--neutral-50);
         border-radius: var(--radius-md);
         border: 2px dashed var(--border);
@@ -537,20 +536,44 @@
 
       .scanner-container {
         position: relative;
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 256px;
+        background-color: var(--neutral-50);
+        border-radius: var(--radius-md);
+        border: 2px dashed var(--border);
+      }
+
+      #scanPlaceholder {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
 
       #video {
-        width: 100%;
-        border-radius: var(--radius-lg);
-        border: 2px solid var(--border);
+        width: 256px;
+        height: 256px;
+        object-fit: contain;
         background-color: var(--neutral-900);
+        display: none;
+      }
+
+      #video.active {
+        display: block;
       }
 
       #canvas {
+        width: 256px;
+        height: 256px;
+        object-fit: contain;
+        background-color: var(--neutral-900);
         display: none;
+      }
+
+      #canvas.active {
+        display: block;
       }
 
       .scanner-overlay {
@@ -607,15 +630,12 @@
       }
 
       .result-box {
+        min-height: 100px;
         padding: var(--spacing-md);
         background-color: var(--accent-50);
         border: 2px solid var(--accent-200);
         border-radius: var(--radius-md);
         word-break: break-all;
-      }
-
-      .hidden {
-        display: none !important;
       }
 
       /* ========================================
@@ -700,6 +720,11 @@
               ></textarea>
             </div>
 
+            <div class="flex gap-sm mt-md">
+              <input type="text" placeholder="如果加密显示1~99的6个数字" />
+              <button class="btn btn-primary-soft btn-sm">加密单选</button>
+            </div>
+
             <div class="flex gap-sm flex-wrap justify-between">
               <button
                 class="btn btn-neutral-outline btn-sm"
@@ -721,22 +746,25 @@
 
         <!-- Section B: Scan QR Code -->
         <section class="card">
-          <h2 class="text-2xl font-semibold mb-lg">📥 扫描二维码</h2>
+          <h2 class="text-2xl font-semibold mb-lg">📥 Scan QR Code</h2>
 
           <div class="flex flex-col gap-md">
-            <div id="scannerSection">
-              <button
-                id="startScanBtn"
-                class="btn btn-primary-solid btn-lg"
-                onclick="startScanning()"
-                style="width: 100%"
-              >
-                📷 开始扫描
-              </button>
-
-              <div id="videoContainer" class="scanner-container mt-lg hidden">
+            <div>
+              <div class="scanner-container">
+                <p
+                  class="text-sm"
+                  style="color: var(--neutral-400)"
+                  id="scanPlaceholder"
+                >
+                  Waiting scanning...
+                </p>
                 <video id="video" autoplay playsinline></video>
-                <div class="scanner-overlay">
+                <canvas id="canvas"></canvas>
+                <div
+                  class="scanner-overlay"
+                  id="scannerOverlay"
+                  style="display: none"
+                >
                   <div class="scanner-corners">
                     <div class="scanner-corner top-left"></div>
                     <div class="scanner-corner top-right"></div>
@@ -745,47 +773,49 @@
                   </div>
                 </div>
               </div>
-
-              <div class="flex gap-sm mt-md hidden" id="scanControls">
-                <button
-                  class="btn btn-accent-solid"
-                  onclick="captureAndDecode()"
-                  style="flex: 1"
-                >
-                  ✅ 确定扫描
-                </button>
-                <button
-                  class="btn btn-neutral-outline"
-                  onclick="stopScanning()"
-                  style="flex: 1"
-                >
-                  ❌ 取消
-                </button>
-              </div>
             </div>
 
-            <canvas id="canvas"></canvas>
+            <div class="result-box">
+              <p id="scanResult" style="margin: 0"></p>
+            </div>
 
-            <div id="resultSection" class="hidden">
-              <h3 class="text-lg font-semibold mb-md">✨ 扫描结果</h3>
-              <div class="result-box">
-                <p id="scanResult" style="margin: 0"></p>
-              </div>
-              <div class="flex gap-sm mt-md">
-                <button
-                  class="btn btn-primary-soft btn-sm"
-                  onclick="copyResult()"
-                >
-                  📋 复制
-                </button>
-                <!-- resetQrScanAreaState() -->
-                <button
-                  class="btn btn-neutral-outline btn-sm"
-                  onclick="resetScanner()"
-                >
-                  🔄 重扫
-                </button>
-              </div>
+            <div class="flex gap-sm mt-md">
+              <input type="text" placeholder="解密" />
+              <button class="btn btn-primary-soft btn-sm">📋 解密</button>
+              <button
+                class="btn btn-primary-soft btn-sm"
+                onclick="copyResult()"
+              >
+                📋 复制
+              </button>
+            </div>
+
+            <div class="flex gap-sm mt-md justify-between">
+              <button
+                class="btn btn-neutral-outline btn-sm"
+                onclick="resetQrScanAreaState()"
+              >
+                🗑️ Reset
+              </button>
+              <button
+                class="btn btn-neutral-outline btn-sm"
+                onclick="stopScanning()"
+              >
+                ❌ 取消
+              </button>
+              <button
+                id="startScanBtn"
+                class="btn btn-primary-solid btn-sm"
+                onclick="startScanning()"
+              >
+                📷 扫描
+              </button>
+              <button
+                class="btn btn-accent-solid btn-sm"
+                onclick="captureAndDecode()"
+              >
+                ✅ 确定
+              </button>
             </div>
           </div>
         </section>
@@ -853,23 +883,21 @@
       // Section B: Scan QR Code
       // ========================================
       async function startScanning() {
-        const videoContainer = document.getElementById("videoContainer");
-        const scanControls = document.getElementById("scanControls");
-        const startBtn = document.getElementById("startScanBtn");
         const video = document.getElementById("video");
+        const placeholder = document.getElementById("scanPlaceholder");
+        const overlay = document.getElementById("scannerOverlay");
 
         try {
-          // Request camera access
           videoStream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "environment" },
           });
 
           video.srcObject = videoStream;
 
-          // Show video and controls
-          videoContainer.classList.remove("hidden");
-          scanControls.classList.remove("hidden");
-          startBtn.style.display = "none";
+          // Hide placeholder, show video and overlay
+          placeholder.style.display = "none";
+          video.classList.add("active");
+          overlay.style.display = "block";
         } catch (error) {
           console.error("Camera access error:", error);
           alert("无法访问摄像头，请确保已授予权限");
@@ -879,8 +907,8 @@
       function captureAndDecode() {
         const video = document.getElementById("video");
         const canvas = document.getElementById("canvas");
-        const resultSection = document.getElementById("resultSection");
         const scanResult = document.getElementById("scanResult");
+        const overlay = document.getElementById("scannerOverlay");
 
         // Set canvas size to match video
         canvas.width = video.videoWidth;
@@ -889,6 +917,18 @@
         // Draw video frame to canvas
         const context = canvas.getContext("2d");
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Show canvas, hide video and overlay
+        canvas.classList.add("active");
+        video.classList.remove("active");
+        overlay.style.display = "none";
+
+        // Stop video stream
+        if (videoStream) {
+          videoStream.getTracks().forEach((track) => track.stop());
+          videoStream = null;
+        }
+        video.srcObject = null;
 
         // Get image data
         const imageData = context.getImageData(
@@ -904,20 +944,16 @@
         });
 
         if (code) {
-          // Successfully decoded
           scanResult.textContent = code.data;
-          resultSection.classList.remove("hidden");
-          stopScanning();
         } else {
           alert("未检测到二维码，请调整角度后重试");
         }
       }
 
       function stopScanning() {
-        const videoContainer = document.getElementById("videoContainer");
-        const scanControls = document.getElementById("scanControls");
-        const startBtn = document.getElementById("startScanBtn");
         const video = document.getElementById("video");
+        const placeholder = document.getElementById("scanPlaceholder");
+        const overlay = document.getElementById("scannerOverlay");
 
         // Stop video stream
         if (videoStream) {
@@ -927,10 +963,10 @@
 
         video.srcObject = null;
 
-        // Hide video and controls
-        videoContainer.classList.add("hidden");
-        scanControls.classList.add("hidden");
-        startBtn.style.display = "inline-flex";
+        // Show placeholder, hide video and overlay
+        placeholder.style.display = "block";
+        video.classList.remove("active");
+        overlay.style.display = "none";
       }
 
       function copyResult() {
@@ -957,26 +993,23 @@
           });
       }
 
-      function resetScanner() {
-        const resultSection = document.getElementById("resultSection");
-        const startBtn = document.getElementById("startScanBtn");
+      function resetQrScanAreaState() {
+        const scanResult = document.getElementById("scanResult");
+        const placeholder = document.getElementById("scanPlaceholder");
+        const video = document.getElementById("video");
+        const overlay = document.getElementById("scannerOverlay");
 
-        resultSection.classList.add("hidden");
-        startBtn.style.display = "inline-flex";
+        // Stop any active scanning
+        stopScanning();
+
+        // Clear scan result
+        scanResult.textContent = "";
+
+        // Reset to initial state
+        placeholder.style.display = "block";
+        video.classList.remove("active");
+        overlay.style.display = "none";
       }
-
-      // ========================================
-      // Keyboard Shortcuts
-      // ========================================
-      document.addEventListener("keydown", function (e) {
-        // Ctrl/Cmd + Enter to generate QR code
-        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-          const textInput = document.getElementById("textInput");
-          if (document.activeElement === textInput && textInput.value.trim()) {
-            generateQRCode();
-          }
-        }
-      });
 
       // ========================================
       // Security: Prevent right-click on entire page
