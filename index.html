@@ -469,29 +469,35 @@
       .container {
         width: 100%;
         max-width: 1200px;
+        margin: 16px auto;
+        padding: 0 var(--spacing-lg);
+      }
+
+      /* ========================================
+         Header Styles
+         ======================================== */
+      .header {
+        padding: var(--spacing-sm) 0;
+        border-bottom: 1px solid var(--border);
+        background-color: var(--surface);
+      }
+      .header-inner {
+        width: 100%;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 0 var(--spacing-md);
       }
 
-      .section {
-        padding: var(--spacing-2xl) 0;
+      .logo {
+        width: 48px;
+        height: 56px;
       }
 
       /* ========================================
          Component Specific Styles
          ======================================== */
-      .app-header {
-        padding: var(--spacing-lg) 0;
-        border-bottom: 1px solid var(--border);
-        background-color: var(--surface);
-      }
-
-      .logo {
-        width: 48px;
-        height: 48px;
-      }
-
       .qr-display {
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -500,11 +506,26 @@
         background-color: var(--neutral-50);
         border-radius: var(--radius-md);
         border: 2px dashed var(--border);
+        /* Security: Prevent text selection and copying */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      #qrPlaceholder {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
 
       #qrcode {
+        width: 256px;
+        height: 256px;
         display: flex;
         justify-content: center;
+        align-items: center;
       }
 
       #qrcode canvas,
@@ -601,10 +622,6 @@
          Responsive Design
          ======================================== */
       @media (min-width: 768px) {
-        .container {
-          padding: 0 var(--spacing-xl);
-        }
-
         .grid-cols-md-2 {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -634,8 +651,8 @@
 
   <body>
     <!-- Header -->
-    <header class="app-header">
-      <div class="container">
+    <header class="header">
+      <div class="header-inner">
         <div class="flex items-center gap-md">
           <img
             src="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/logo.png"
@@ -645,7 +662,7 @@
           <div>
             <h1 class="text-2xl font-bold">Reed</h1>
             <p class="text-sm" style="color: var(--neutral-500)">
-              端到端加密传输工具
+              air-gapped conduit for sensitive data.
             </p>
           </div>
         </div>
@@ -653,63 +670,50 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container section">
+    <main class="container">
       <div class="grid grid-cols-1 grid-cols-md-2 gap-xl">
         <!-- Section A: Generate QR Code -->
         <section class="card">
-          <h2 class="text-2xl font-semibold mb-lg">📤 生成二维码</h2>
-
+          <h2 class="text-2xl font-semibold mb-lg">📤 Generate QR Code</h2>
           <div class="flex flex-col gap-md">
-            <div>
-              <label
-                for="textInput"
-                class="text-sm font-medium mb-md"
-                style="display: block"
-              >
-                输入内容
-              </label>
-              <textarea
-                id="textInput"
-                class="input textarea"
-                placeholder="输入要生成二维码的内容（密码、私钥、助记词等）"
-              ></textarea>
-            </div>
-
-            <button
-              id="generateBtn"
-              class="btn btn-primary-solid btn-lg"
-              onclick="generateQRCode()"
-            >
-              🎯 生成二维码
-            </button>
-
             <div class="qr-display" id="qrDisplay">
-              <div id="qrcode"></div>
               <p
                 class="text-sm"
                 style="color: var(--neutral-400)"
                 id="qrPlaceholder"
               >
-                点击上方按钮生成二维码
+                Waiting generation...
               </p>
+              <div id="qrcode"></div>
             </div>
 
-            <div class="flex gap-sm flex-wrap">
-              <button
-                class="btn btn-accent-soft btn-sm"
-                onclick="downloadQRCode()"
-                id="downloadBtn"
-                style="display: none"
-              >
-                💾 下载
-              </button>
+            <div>
+              <textarea
+                id="textInput"
+                class="input textarea"
+                placeholder="text, password, privateKey, mnemonic, etc."
+                autocomplete="off"
+                spellcheck="false"
+                data-gramm="false"
+                data-gramm_editor="false"
+                data-enable-grammarly="false"
+              ></textarea>
+            </div>
+
+            <div class="flex gap-sm flex-wrap justify-between">
               <button
                 class="btn btn-neutral-outline btn-sm"
-                onclick="clearQRCode()"
-                id="clearBtn"
-                style="display: none"
+                onclick="resetQrGenAreaState()"
+                id="resetQrGenAreaBtn"
               >
-                🗑️ 清除
+                🗑️ Reset
+              </button>
+              <button
+                id="generateBtn"
+                class="btn btn-primary-solid btn-sm"
+                onclick="generateQRCode()"
+              >
+                🎯 Gen QR
               </button>
             </div>
           </div>
@@ -774,6 +778,7 @@
                 >
                   📋 复制
                 </button>
+                <!-- resetQrScanAreaState() -->
                 <button
                   class="btn btn-neutral-outline btn-sm"
                   onclick="resetScanner()"
@@ -793,7 +798,6 @@
       // Global State
       // ========================================
       let videoStream = null;
-      let qrCodeInstance = null;
 
       // ========================================
       // Section A: Generate QR Code
@@ -802,17 +806,14 @@
         const text = document.getElementById("textInput").value.trim();
         const qrContainer = document.getElementById("qrcode");
         const placeholder = document.getElementById("qrPlaceholder");
-        const downloadBtn = document.getElementById("downloadBtn");
-        const clearBtn = document.getElementById("clearBtn");
 
         if (!text) {
-          alert("请输入内容");
+          alert("Please enter content.");
           return;
         }
 
         // Clear previous QR code
         qrContainer.innerHTML = "";
-        placeholder.style.display = "none";
 
         // Generate QR code
         QRCode.toCanvas(
@@ -829,40 +830,23 @@
           function (error, canvas) {
             if (error) {
               console.error(error);
-              alert("生成二维码失败");
-              placeholder.style.display = "block";
+              alert("Generation failed");
               return;
             }
             qrContainer.appendChild(canvas);
-            qrCodeInstance = canvas;
-            downloadBtn.style.display = "inline-flex";
-            clearBtn.style.display = "inline-flex";
+            placeholder.style.display = "none";
           }
         );
       }
 
-      function downloadQRCode() {
-        if (!qrCodeInstance) return;
-
-        const link = document.createElement("a");
-        link.download = "qrcode.png";
-        link.href = qrCodeInstance.toDataURL();
-        link.click();
-      }
-
-      function clearQRCode() {
+      function resetQrGenAreaState() {
         const qrContainer = document.getElementById("qrcode");
-        const placeholder = document.getElementById("qrPlaceholder");
-        const downloadBtn = document.getElementById("downloadBtn");
-        const clearBtn = document.getElementById("clearBtn");
         const textInput = document.getElementById("textInput");
+        const placeholder = document.getElementById("qrPlaceholder");
 
         qrContainer.innerHTML = "";
         textInput.value = "";
         placeholder.style.display = "block";
-        downloadBtn.style.display = "none";
-        clearBtn.style.display = "none";
-        qrCodeInstance = null;
       }
 
       // ========================================
@@ -992,6 +976,14 @@
             generateQRCode();
           }
         }
+      });
+
+      // ========================================
+      // Security: Prevent right-click on entire page
+      // ========================================
+      document.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+        return false;
       });
 
       // ========================================
