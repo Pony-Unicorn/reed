@@ -1351,6 +1351,104 @@
       }
 
       // ========================================
+      // Crypto: Parameter Configuration
+      // ========================================
+      const PBKDF2_ITERS = 120_000;
+      const SALT_BYTES = 16;
+      const IV_BYTES = 12;
+
+      // ========================================
+      // Encoding tool
+      // ========================================
+      const enc = new TextEncoder();
+      const dec = new TextDecoder();
+
+      function b64encode(buf) {
+        return btoa(String.fromCharCode(...new Uint8Array(buf)));
+      }
+      function b64decode(str) {
+        return Uint8Array.from(atob(str), (c) => c.charCodeAt(0)).buffer;
+      }
+
+      // =======================
+      // OTP
+      // =======================
+      function generateOtp() {
+        const arr = new Uint16Array(6);
+        crypto.getRandomValues(arr);
+        return Array.from(arr, (x) => x % 100);
+      }
+
+      function otpToString(nums) {
+        return nums.map((n) => String(n).padStart(3, "0")).join("-");
+      }
+
+      // =======================
+      // Key Derivation
+      // =======================
+      async function deriveKey(passStr, salt) {
+        const keyMaterial = await crypto.subtle.importKey(
+          "raw",
+          enc.encode(passStr),
+          "PBKDF2",
+          false,
+          ["deriveKey"]
+        );
+
+        return crypto.subtle.deriveKey(
+          {
+            name: "PBKDF2",
+            salt,
+            iterations: PBKDF2_ITERS,
+            hash: "SHA-256",
+          },
+          keyMaterial,
+          { name: "AES-GCM", length: 256 },
+          false,
+          ["encrypt", "decrypt"]
+        );
+      }
+
+      async function encryptOnce(plaintext, otpNums) {
+        const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
+        const iv = crypto.getRandomValues(new Uint8Array(IV_BYTES));
+
+        const key = await deriveKey(otpToString(otpNums), salt);
+
+        const ct = await crypto.subtle.encrypt(
+          { name: "AES-GCM", iv },
+          key,
+          enc.encode(plaintext)
+        );
+
+        return [
+          "v1",
+          b64encode(salt.buffer),
+          b64encode(iv.buffer),
+          b64encode(ct),
+        ].join(".");
+      }
+
+      async function decryptOnce(packed, otpNums) {
+        const [ver, saltB64, ivB64, ctB64] = packed.split(".");
+        if (ver !== "v1") throw new Error("Unsupported version");
+
+        const salt = new Uint8Array(b64decode(saltB64));
+        const iv = new Uint8Array(b64decode(ivB64));
+        const ct = b64decode(ctB64);
+
+        const key = await deriveKey(otpToString(otpNums), salt);
+
+        const pt = await crypto.subtle.decrypt(
+          { name: "AES-GCM", iv },
+          key,
+          ct
+        );
+
+        return dec.decode(pt);
+      }
+
+      // ========================================
       // Security: Prevent right-click on entire page
       // ========================================
       document.addEventListener("contextmenu", function (e) {
