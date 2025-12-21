@@ -232,4 +232,3 @@ KxenEcyg2JtMSJmLCNWDJeNBthLjACtv7Je1eERn8qYLhJitigaP
 
 - ⏳ 生成二维码优化
 - ⏳ 密码显示与隐藏
-- ⏳ 优化电脑扫码，前置摄像头问题

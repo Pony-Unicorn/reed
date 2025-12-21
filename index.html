@@ -398,7 +398,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 256px;
+        min-height: 260px;
         background-color: var(--neutral-50);
         border-radius: var(--radius-md);
         border: 2px dashed var(--border);
@@ -436,7 +436,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 256px;
+        min-height: 260px;
         background-color: var(--neutral-50);
         border-radius: var(--radius-md);
         border: 2px dashed var(--border);
@@ -595,6 +595,13 @@
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
+
+      /* Flip video only on desktop devices (not mobile) */
+      @media (hover: hover) and (pointer: fine) {
+        #video {
+          transform: scaleX(-1);
+        }
+      }
     </style>
 
     <script
@@ -704,7 +711,10 @@
             </div>
 
             <div class="result-box">
-              <p id="scanResult" class="m-0"></p>
+              <p class="text-sm text-muted" id="resultPlaceholder">
+                Waiting result...
+              </p>
+              <p id="scanResult" class="m-0 hidden"></p>
             </div>
 
             <div class="flex gap-sm mt-md justify-between">
@@ -987,18 +997,6 @@
 
           video.srcObject = videoStream;
 
-          // Log actual video resolution when metadata is loaded
-          video.onloadedmetadata = () => {
-            const actualWidth = video.videoWidth;
-            const actualHeight = video.videoHeight;
-            console.log(`📹 Camera Resolution: ${actualWidth}x${actualHeight}`);
-
-            // Get actual settings from video track
-            const videoTrack = videoStream.getVideoTracks()[0];
-            const settings = videoTrack.getSettings();
-            console.log("📋 Camera Settings:", settings);
-          };
-
           // Hide placeholder, show video and overlay
           placeholder.classList.add("hidden");
           video.classList.add("active");
@@ -1016,6 +1014,7 @@
         const video = $("video");
         const canvas = $("canvas");
         const scanResult = $("scanResult");
+        const resultPlaceholder = $("resultPlaceholder");
         const overlay = $("scannerOverlay");
 
         // Set canvas size to match video
@@ -1052,6 +1051,9 @@
         });
 
         if (code) {
+          // Hide placeholder, show result
+          resultPlaceholder.classList.add("hidden");
+          scanResult.classList.remove("hidden");
           scanResult.textContent = code.data;
           showResultButtons();
         } else {
