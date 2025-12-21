@@ -230,6 +230,5 @@ KxenEcyg2JtMSJmLCNWDJeNBthLjACtv7Je1eERn8qYLhJitigaP
 
 ## 📋 开发路线图
 
-- ⏳ 密码显示与隐藏
-- ⏳ 是否使用加密，密码显示与隐藏
+- ⏳ 加密传输
 - ⏳ 生成二维码优化

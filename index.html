@@ -535,6 +535,52 @@
       }
 
       /* ========================================
+         Visibility Toggle Component
+         ======================================== */
+      .input-wrapper,
+      .result-wrapper {
+        position: relative;
+      }
+
+      .toggle-visibility-btn {
+        position: absolute;
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: var(--spacing-xs);
+        font-size: 1.25rem;
+        line-height: 1;
+        color: var(--neutral-500);
+        transition: color 0.2s ease;
+        z-index: 10;
+      }
+
+      .toggle-visibility-btn:hover {
+        color: var(--primary-600);
+      }
+
+      .toggle-visibility-btn:focus {
+        outline: 2px solid var(--primary-500);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
+      }
+
+      /* Blur effect for hidden content */
+      .content-hidden {
+        filter: blur(8px);
+        user-select: none;
+        pointer-events: none;
+        transition: filter 0.2s ease;
+      }
+
+      .result-wrapper .toggle-visibility-btn {
+        top: var(--spacing-md);
+        right: var(--spacing-md);
+      }
+
+      /* ========================================
          FAQ Component
          ======================================== */
       .faq-section {
@@ -648,7 +694,16 @@
               <div id="qrcode"></div>
             </div>
 
-            <div>
+            <div class="input-wrapper">
+              <button
+                class="toggle-visibility-btn"
+                id="toggleInputBtn"
+                onclick="toggleInputVisibility()"
+                title="Show/Hide content"
+                aria-label="Toggle input visibility"
+              >
+                👁️
+              </button>
               <textarea
                 id="textInput"
                 class="input textarea"
@@ -710,11 +765,22 @@
               </div>
             </div>
 
-            <div class="result-box">
-              <p class="text-sm text-muted" id="resultPlaceholder">
-                Waiting result...
-              </p>
-              <p id="scanResult" class="m-0 hidden"></p>
+            <div class="result-wrapper">
+              <button
+                class="toggle-visibility-btn hidden"
+                id="toggleResultBtn"
+                onclick="toggleResultVisibility()"
+                title="Show/Hide content"
+                aria-label="Toggle result visibility"
+              >
+                👁️
+              </button>
+              <div class="result-box">
+                <p class="text-sm text-muted" id="resultPlaceholder">
+                  Waiting result...
+                </p>
+                <p id="scanResult" class="m-0 hidden"></p>
+              </div>
             </div>
 
             <div class="flex gap-sm mt-md justify-between">
@@ -1025,18 +1091,6 @@
         const context = canvas.getContext("2d");
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Show canvas, hide video and overlay
-        canvas.classList.add("active");
-        video.classList.remove("active");
-        overlay.classList.add("hidden");
-
-        // Stop video stream
-        if (videoStream) {
-          videoStream.getTracks().forEach((track) => track.stop());
-          videoStream = null;
-        }
-        video.srcObject = null;
-
         // Get image data
         const imageData = context.getImageData(
           0,
@@ -1051,15 +1105,57 @@
         });
 
         if (code) {
+          // Success - show canvas, stop camera and show result
+          canvas.classList.add("active");
+          video.classList.remove("active");
+          overlay.classList.add("hidden");
+
+          // Stop video stream
+          if (videoStream) {
+            videoStream.getTracks().forEach((track) => track.stop());
+            videoStream = null;
+          }
+          video.srcObject = null;
+
           // Hide placeholder, show result
           resultPlaceholder.classList.add("hidden");
           scanResult.classList.remove("hidden");
           scanResult.textContent = code.data;
+
+          // Show toggle visibility button for result
+          $("toggleResultBtn").classList.remove("hidden");
+
           showResultButtons();
         } else {
-          alert("QR code not detected. Please adjust the angle and retry.");
-          reloadPage();
+          // Failed - keep camera open, let user adjust and retry
+          alert("QR code not detected. Please adjust the angle and try again.");
+          // Camera remains open, user can click Confirm again to retry
         }
+      }
+
+      function resetScannerState() {
+        const video = $("video");
+        const placeholder = $("scanPlaceholder");
+        const overlay = $("scannerOverlay");
+        const canvas = $("canvas");
+
+        // Stop video stream
+        if (videoStream) {
+          videoStream.getTracks().forEach((track) => track.stop());
+          videoStream = null;
+        }
+
+        // Reset video and canvas
+        video.srcObject = null;
+        video.classList.remove("active");
+        canvas.classList.remove("active");
+        overlay.classList.add("hidden");
+
+        // Show placeholder
+        placeholder.classList.remove("hidden");
+
+        // Show waiting buttons (Scan + Reset)
+        showWaitingButtons();
       }
 
       function stopScanning() {
@@ -1112,6 +1208,43 @@
 
       function reloadPage() {
         window.location.reload();
+      }
+
+      // ========================================
+      // Visibility Toggle Functions
+      // ========================================
+      function toggleInputVisibility() {
+        const textInput = $("textInput");
+        const toggleBtn = $("toggleInputBtn");
+
+        if (textInput.classList.contains("content-hidden")) {
+          // Show content
+          textInput.classList.remove("content-hidden");
+          toggleBtn.textContent = "👁️";
+          toggleBtn.title = "Hide content";
+        } else {
+          // Hide content
+          textInput.classList.add("content-hidden");
+          toggleBtn.textContent = "👁️‍🗨️";
+          toggleBtn.title = "Show content";
+        }
+      }
+
+      function toggleResultVisibility() {
+        const scanResult = $("scanResult");
+        const toggleBtn = $("toggleResultBtn");
+
+        if (scanResult.classList.contains("content-hidden")) {
+          // Show content
+          scanResult.classList.remove("content-hidden");
+          toggleBtn.textContent = "👁️";
+          toggleBtn.title = "Hide content";
+        } else {
+          // Hide content
+          scanResult.classList.add("content-hidden");
+          toggleBtn.textContent = "👁️‍🗨️";
+          toggleBtn.title = "Show content";
+        }
       }
 
       // ========================================
