@@ -581,6 +581,33 @@
       }
 
       /* ========================================
+         Encryption Component
+         ======================================== */
+      .otp-display {
+        color: var(--accent-700);
+        font-family: monospace;
+        font-size: 0.875rem;
+      }
+
+      .encrypt-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      .encrypt-label {
+        cursor: pointer;
+      }
+
+      .decrypt-header {
+        color: var(--primary-700);
+      }
+
+      .otp-input {
+        font-family: monospace;
+      }
+
+      /* ========================================
          FAQ Component
          ======================================== */
       .faq-section {
@@ -796,23 +823,15 @@
 
             <!-- Encryption Options -->
             <div class="flex items-center justify-between">
-              <div
-                id="otpDisplay"
-                class="text-sm font-semibold"
-                style="
-                  color: var(--accent-700);
-                  font-family: monospace;
-                  font-size: 0.875rem;
-                "
-              >
+              <div id="otpDisplay" class="text-sm font-semibold otp-display">
                 <span id="otpCode">--</span>
               </div>
-              <label class="flex items-center gap-sm" style="cursor: pointer">
+              <label class="flex items-center gap-sm encrypt-label">
                 <input
                   type="checkbox"
                   id="encryptCheckbox"
+                  class="encrypt-checkbox"
                   onchange="handleEncryptionToggle()"
-                  style="width: 18px; height: 18px; cursor: pointer"
                 />
                 <span class="text-sm">🔐 Encrypt</span>
               </label>
@@ -861,20 +880,16 @@
 
             <!-- Decryption Options -->
             <div id="decryptionPanel" class="hidden flex flex-col gap-sm">
-              <div
-                class="text-sm font-semibold"
-                style="color: var(--primary-700)"
-              >
+              <div class="text-sm font-semibold decrypt-header">
                 🔓 Encrypted content detected
               </div>
               <input
                 type="text"
                 id="otpInput"
-                class="input"
+                class="input otp-input"
                 placeholder="Enter OTP (e.g., 042-067-089-012-045-078)"
                 autocomplete="off"
                 spellcheck="false"
-                style="font-family: monospace"
               />
               <button
                 class="btn btn-accent-solid btn-sm"
@@ -1159,7 +1174,9 @@
               }
               qrContainer.appendChild(canvas);
               placeholder.classList.add("hidden");
-              toggleInputVisibility();
+
+              // Hide input content for security
+              hideInputContent();
             }
           );
         } catch (error) {
@@ -1465,20 +1482,34 @@
       // ========================================
       // Visibility Toggle Functions
       // ========================================
-      function toggleInputVisibility() {
+      function hideInputContent() {
+        const textInput = $("textInput");
+        const toggleBtn = $("toggleInputBtn");
+
+        if (!textInput.classList.contains("content-hidden")) {
+          textInput.classList.add("content-hidden");
+          toggleBtn.textContent = "👁️‍🗨️";
+          toggleBtn.title = "Show content";
+        }
+      }
+
+      function showInputContent() {
         const textInput = $("textInput");
         const toggleBtn = $("toggleInputBtn");
 
         if (textInput.classList.contains("content-hidden")) {
-          // Show content
           textInput.classList.remove("content-hidden");
           toggleBtn.textContent = "👁️";
           toggleBtn.title = "Hide content";
+        }
+      }
+
+      function toggleInputVisibility() {
+        const textInput = $("textInput");
+        if (textInput.classList.contains("content-hidden")) {
+          showInputContent();
         } else {
-          // Hide content
-          textInput.classList.add("content-hidden");
-          toggleBtn.textContent = "👁️‍🗨️";
-          toggleBtn.title = "Show content";
+          hideInputContent();
         }
       }
 

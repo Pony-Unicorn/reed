@@ -230,4 +230,4 @@ KxenEcyg2JtMSJmLCNWDJeNBthLjACtv7Je1eERn8qYLhJitigaP
 
 ## 📋 开发路线图
 
-- ⏳ 加密传输
+- ⏳ 加密传输，扫描端优化
