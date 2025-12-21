@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <meta name="color-scheme" content="light" />
     <title>Reed</title>
     <meta
@@ -179,37 +182,15 @@
         align-items: center;
       }
 
-      .items-start {
-        align-items: flex-start;
-      }
-
-      .items-end {
-        align-items: flex-end;
-      }
-
-      .justify-center {
-        justify-content: center;
-      }
-
       .justify-between {
         justify-content: space-between;
       }
 
-      .justify-around {
-        justify-content: space-around;
-      }
-
-      .gap-xs {
-        gap: var(--spacing-xs);
-      }
       .gap-sm {
         gap: var(--spacing-sm);
       }
       .gap-md {
         gap: var(--spacing-md);
-      }
-      .gap-lg {
-        gap: var(--spacing-lg);
       }
       .gap-xl {
         gap: var(--spacing-xl);
@@ -222,43 +203,15 @@
       .grid-cols-1 {
         grid-template-columns: repeat(1, minmax(0, 1fr));
       }
-      .grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
 
       /* ========================================
          Spacing Utilities
          ======================================== */
-      .p-xs {
-        padding: var(--spacing-xs);
-      }
-      .p-sm {
-        padding: var(--spacing-sm);
-      }
-      .p-md {
-        padding: var(--spacing-md);
-      }
-      .p-lg {
-        padding: var(--spacing-lg);
-      }
-      .p-xl {
-        padding: var(--spacing-xl);
-      }
-      .p-2xl {
-        padding: var(--spacing-2xl);
-      }
-
-      .m-auto {
-        margin: auto;
+      .mt-xs {
+        margin-top: var(--spacing-xs);
       }
       .mt-md {
         margin-top: var(--spacing-md);
-      }
-      .mt-lg {
-        margin-top: var(--spacing-lg);
-      }
-      .mb-md {
-        margin-bottom: var(--spacing-md);
       }
       .mb-lg {
         margin-bottom: var(--spacing-lg);
@@ -267,31 +220,13 @@
       /* ========================================
          Typography
          ======================================== */
-      .text-xs {
-        font-size: 0.75rem;
-      }
       .text-sm {
         font-size: 0.875rem;
-      }
-      .text-base {
-        font-size: 1rem;
-      }
-      .text-lg {
-        font-size: 1.125rem;
-      }
-      .text-xl {
-        font-size: 1.25rem;
       }
       .text-2xl {
         font-size: 1.5rem;
       }
-      .text-3xl {
-        font-size: 1.875rem;
-      }
 
-      .font-medium {
-        font-weight: 500;
-      }
       .font-semibold {
         font-weight: 600;
       }
@@ -299,8 +234,26 @@
         font-weight: 700;
       }
 
-      .text-center {
-        text-align: center;
+      .text-muted {
+        color: var(--neutral-400);
+      }
+
+      .text-secondary {
+        color: var(--neutral-500);
+      }
+
+      /* ========================================
+         Display & Visibility Utilities
+         ======================================== */
+      .hidden {
+        display: none !important;
+      }
+
+      /* ========================================
+         Margin Utilities
+         ======================================== */
+      .m-0 {
+        margin: 0;
       }
 
       /* ========================================
@@ -333,11 +286,6 @@
         font-size: 0.875rem;
       }
 
-      .btn-lg {
-        padding: var(--spacing-md) var(--spacing-xl);
-        font-size: 1.125rem;
-      }
-
       /* Primary Button Variants */
       .btn-primary-solid {
         background-color: var(--primary-600);
@@ -355,15 +303,6 @@
         background-color: var(--primary-200);
       }
 
-      .btn-primary-outline {
-        background-color: transparent;
-        color: var(--primary-600);
-        border-color: var(--primary-600);
-      }
-      .btn-primary-outline:hover:not(:disabled) {
-        background-color: var(--primary-50);
-      }
-
       /* Accent Button Variants */
       .btn-accent-solid {
         background-color: var(--accent-600);
@@ -373,40 +312,7 @@
         background-color: var(--accent-700);
       }
 
-      .btn-accent-soft {
-        background-color: var(--accent-100);
-        color: var(--accent-700);
-      }
-      .btn-accent-soft:hover:not(:disabled) {
-        background-color: var(--accent-200);
-      }
-
-      .btn-accent-outline {
-        background-color: transparent;
-        color: var(--accent-600);
-        border-color: var(--accent-600);
-      }
-      .btn-accent-outline:hover:not(:disabled) {
-        background-color: var(--accent-50);
-      }
-
       /* Neutral Button Variants */
-      .btn-neutral-solid {
-        background-color: var(--neutral-600);
-        color: white;
-      }
-      .btn-neutral-solid:hover:not(:disabled) {
-        background-color: var(--neutral-700);
-      }
-
-      .btn-neutral-soft {
-        background-color: var(--neutral-100);
-        color: var(--neutral-700);
-      }
-      .btn-neutral-soft:hover:not(:disabled) {
-        background-color: var(--neutral-200);
-      }
-
       .btn-neutral-outline {
         background-color: transparent;
         color: var(--neutral-600);
@@ -425,15 +331,6 @@
         border: 1px solid var(--border);
         box-shadow: var(--shadow-sm);
         padding: var(--spacing-lg);
-      }
-
-      .card-hover {
-        transition: all 0.2s ease;
-      }
-
-      .card-hover:hover {
-        box-shadow: var(--shadow-md);
-        transform: translateY(-2px);
       }
 
       /* ========================================
@@ -639,22 +536,64 @@
       }
 
       /* ========================================
+         FAQ Component
+         ======================================== */
+      .faq-section {
+        background-color: var(--surface);
+        border-top: 1px solid var(--border);
+        padding: var(--spacing-2xl) 0;
+        margin-top: var(--spacing-2xl);
+      }
+
+      .faq-item {
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .faq-question {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--foreground);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .faq-answer {
+        color: var(--neutral-600);
+        line-height: 1.8;
+      }
+
+      .faq-answer ul {
+        margin: var(--spacing-sm) 0;
+        padding-left: var(--spacing-lg);
+      }
+
+      .faq-answer li {
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .faq-contact {
+        display: flex;
+        gap: var(--spacing-lg);
+        flex-wrap: wrap;
+        margin-top: var(--spacing-md);
+      }
+
+      .faq-contact a {
+        color: var(--primary-600);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      .faq-contact a:hover {
+        color: var(--primary-700);
+        text-decoration: underline;
+      }
+
+      /* ========================================
          Responsive Design
          ======================================== */
       @media (min-width: 768px) {
         .grid-cols-md-2 {
           grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 767px) {
-        .text-3xl {
-          font-size: 1.5rem;
-        }
-
-        .btn-lg {
-          padding: var(--spacing-sm) var(--spacing-lg);
-          font-size: 1rem;
         }
       }
     </style>
@@ -681,7 +620,7 @@
           />
           <div>
             <h1 class="text-2xl font-bold">Reed</h1>
-            <p class="text-sm" style="color: var(--neutral-500)">
+            <p class="text-sm text-secondary">
               air-gapped conduit for sensitive data.
             </p>
           </div>
@@ -697,11 +636,7 @@
           <h2 class="text-2xl font-semibold mb-lg">📤 Generate QR Code</h2>
           <div class="flex flex-col gap-md">
             <div class="qr-display" id="qrDisplay">
-              <p
-                class="text-sm"
-                style="color: var(--neutral-400)"
-                id="qrPlaceholder"
-              >
+              <p class="text-sm text-muted" id="qrPlaceholder">
                 Waiting generation...
               </p>
               <div id="qrcode"></div>
@@ -718,18 +653,20 @@
                 data-gramm_editor="false"
                 data-enable-grammarly="false"
               ></textarea>
+              <div class="text-sm text-muted mt-xs">
+                <span id="charCount">0</span> / 200 characters
+              </div>
             </div>
 
-            <div class="flex gap-sm mt-md">
+            <!-- <div class="flex gap-sm mt-md">
               <input type="text" placeholder="如果加密显示1~99的6个数字" />
               <button class="btn btn-primary-soft btn-sm">加密单选</button>
-            </div>
+            </div> -->
 
             <div class="flex gap-sm flex-wrap justify-between">
               <button
                 class="btn btn-neutral-outline btn-sm"
-                onclick="resetQrGenAreaState()"
-                id="resetQrGenAreaBtn"
+                onclick="reloadPage()"
               >
                 🗑️ Reset
               </button>
@@ -751,20 +688,12 @@
           <div class="flex flex-col gap-md">
             <div>
               <div class="scanner-container">
-                <p
-                  class="text-sm"
-                  style="color: var(--neutral-400)"
-                  id="scanPlaceholder"
-                >
+                <p class="text-sm text-muted" id="scanPlaceholder">
                   Waiting scanning...
                 </p>
                 <video id="video" autoplay playsinline></video>
                 <canvas id="canvas"></canvas>
-                <div
-                  class="scanner-overlay"
-                  id="scannerOverlay"
-                  style="display: none"
-                >
+                <div class="scanner-overlay hidden" id="scannerOverlay">
                   <div class="scanner-corners">
                     <div class="scanner-corner top-left"></div>
                     <div class="scanner-corner top-right"></div>
@@ -776,45 +705,55 @@
             </div>
 
             <div class="result-box">
-              <p id="scanResult" style="margin: 0"></p>
-            </div>
-
-            <div class="flex gap-sm mt-md">
-              <input type="text" placeholder="解密" />
-              <button class="btn btn-primary-soft btn-sm">📋 解密</button>
-              <button
-                class="btn btn-primary-soft btn-sm"
-                onclick="copyResult()"
-              >
-                📋 复制
-              </button>
+              <p id="scanResult" class="m-0"></p>
             </div>
 
             <div class="flex gap-sm mt-md justify-between">
+              <!-- Waiting State: Scan + Reset -->
               <button
+                id="waitingResetBtn"
                 class="btn btn-neutral-outline btn-sm"
-                onclick="resetQrScanAreaState()"
+                onclick="reloadPage()"
               >
                 🗑️ Reset
               </button>
               <button
-                class="btn btn-neutral-outline btn-sm"
-                onclick="stopScanning()"
-              >
-                ❌ 取消
-              </button>
-              <button
-                id="startScanBtn"
+                id="scanBtn"
                 class="btn btn-primary-solid btn-sm"
                 onclick="startScanning()"
               >
-                📷 扫描
+                📷 Scan QR
+              </button>
+              <!-- Scanning State: Cancel + Confirm -->
+              <button
+                id="cancelBtn"
+                class="btn btn-neutral-outline btn-sm hidden"
+                onclick="stopScanning()"
+              >
+                ❌ Cancel
               </button>
               <button
-                class="btn btn-accent-solid btn-sm"
+                id="confirmBtn"
+                class="btn btn-accent-solid btn-sm hidden"
                 onclick="captureAndDecode()"
               >
-                ✅ 确定
+                ✅ Confirm
+              </button>
+
+              <!-- Result State: Reset + Copy -->
+              <button
+                id="resultResetBtn"
+                class="btn btn-neutral-outline btn-sm hidden"
+                onclick="reloadPage()"
+              >
+                🗑️ Reset
+              </button>
+              <button
+                id="resultCopyBtn"
+                class="btn btn-primary-soft btn-sm hidden"
+                onclick="copyResult()"
+              >
+                📋 Copy
               </button>
             </div>
           </div>
@@ -822,8 +761,131 @@
       </div>
     </main>
 
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <div class="container">
+        <h2 class="text-2xl font-bold mb-lg">❓ FAQ - 常见问题</h2>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Q: 这个工具安全吗？</h3>
+          <div class="faq-answer">
+            <p>
+              Reed
+              是一个完全离线运行的工具，不会将您的数据发送到任何服务器。所有操作都在您的浏览器本地完成。为了进一步提升安全性，建议：
+            </p>
+            <ul>
+              <li>使用浏览器的无痕/隐私模式</li>
+              <li>在离线环境中使用</li>
+              <li>采用分段传输的方式处理敏感信息</li>
+              <li>避免使用剪贴板复制粘贴</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Q: 为什么要避免使用剪贴板？</h3>
+          <div class="faq-answer">
+            <p>
+              许多软件可能会监听或同步剪贴板内容，包括输入法（特别是云输入法）、翻译工具、剪贴板增强工具等。虽然这些软件通常无法读取屏幕或摄像头内容，但可以在您复制文本时获取完整内容。因此，避免让敏感信息进入剪贴板是一个有效的风险降低措施。
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Q: 什么是分段传输？为什么推荐使用？</h3>
+          <div class="faq-answer">
+            <p>
+              分段传输是指将长的私钥或助记词拆分成多个较短的片段（建议 3-5
+              段），分别生成二维码并传输。这种方式的优势是：
+            </p>
+            <ul>
+              <li>降低单次泄露的风险</li>
+              <li>二维码更清晰，扫描成功率更高</li>
+              <li>可以灵活选择某些片段手动输入，而不通过二维码</li>
+              <li>即使部分片段被截获，也无法获得完整信息</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Q: 如何使用无痕模式？</h3>
+          <div class="faq-answer">
+            <p>在主流浏览器中打开无痕/隐私模式的快捷键：</p>
+            <ul>
+              <li>
+                <strong>Chrome / Edge</strong>: Ctrl + Shift + N (Windows/Linux)
+                或 Cmd + Shift + N (Mac)
+              </li>
+              <li>
+                <strong>Firefox</strong>: Ctrl + Shift + P (Windows/Linux) 或
+                Cmd + Shift + P (Mac)
+              </li>
+              <li><strong>Safari</strong>: Cmd + Shift + N (Mac)</li>
+            </ul>
+            <p>
+              无痕模式可以防止浏览器扩展访问页面内容，并在会话结束后自动清理所有数据。
+            </p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Q: 为什么限制 200 字符？</h3>
+          <div class="faq-answer">
+            <p>
+              200
+              字符的限制是为了确保二维码的扫描质量。较长的内容会导致二维码变得密集，在
+              256x256 像素的显示尺寸下难以扫描。200
+              字符足以满足大多数使用场景，包括：
+            </p>
+            <ul>
+              <li>密码：通常 8-64 字符</li>
+              <li>比特币私钥：52-64 字符</li>
+              <li>助记词（12 词）：约 150 字符</li>
+              <li>API Token：通常 32-256 字符</li>
+            </ul>
+            <p>对于更长的内容（如 24 词助记词），建议使用分段传输的方式。</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">Q: 遇到问题或有建议如何反馈？</h3>
+          <div class="faq-answer">
+            <p>欢迎通过以下方式联系：</p>
+            <div class="faq-contact">
+              <a
+                href="https://github.com/Pony-Unicorn/reed/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                >💬 GitHub Issues</a
+              >
+              <a
+                href="https://x.com/shunfengge"
+                target="_blank"
+                rel="noopener noreferrer"
+                >🐦 Twitter/X @shunfengge</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <h3 class="faq-question">⚠️ 免责声明</h3>
+          <div class="faq-answer">
+            <p>
+              请确保在安全、可信的环境中使用本工具。任何私钥一旦泄露，均可能导致资产永久损失。本工具仅提供技术方案，使用者需自行承担安全责任。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- JavaScript -->
     <script>
+      // ========================================
+      // Utility
+      // ========================================
+      const $ = (id) => document.getElementById(id);
+
       // ========================================
       // Global State
       // ========================================
@@ -833,12 +895,21 @@
       // Section A: Generate QR Code
       // ========================================
       function generateQRCode() {
-        const text = document.getElementById("textInput").value.trim();
-        const qrContainer = document.getElementById("qrcode");
-        const placeholder = document.getElementById("qrPlaceholder");
+        const text = $("textInput").value.trim();
+        const qrContainer = $("qrcode");
+        const placeholder = $("qrPlaceholder");
 
         if (!text) {
           alert("Please enter content.");
+          return;
+        }
+
+        // Character limit check
+        const MAX_LENGTH = 200;
+        if (text.length > MAX_LENGTH) {
+          alert(
+            `Content too long (${text.length} characters).\nMaximum allowed: ${MAX_LENGTH} characters.\n\nTip: Long content may result in unreadable QR codes.`
+          );
           return;
         }
 
@@ -864,51 +935,73 @@
               return;
             }
             qrContainer.appendChild(canvas);
-            placeholder.style.display = "none";
+            placeholder.classList.add("hidden");
           }
         );
-      }
-
-      function resetQrGenAreaState() {
-        const qrContainer = document.getElementById("qrcode");
-        const textInput = document.getElementById("textInput");
-        const placeholder = document.getElementById("qrPlaceholder");
-
-        qrContainer.innerHTML = "";
-        textInput.value = "";
-        placeholder.style.display = "block";
       }
 
       // ========================================
       // Section B: Scan QR Code
       // ========================================
+      // Button state management
+      function showWaitingButtons() {
+        $("scanBtn").classList.remove("hidden");
+        $("waitingResetBtn").classList.remove("hidden");
+        $("cancelBtn").classList.add("hidden");
+        $("confirmBtn").classList.add("hidden");
+        $("resultResetBtn").classList.add("hidden");
+        $("resultCopyBtn").classList.add("hidden");
+      }
+
+      function showScanningButtons() {
+        $("scanBtn").classList.add("hidden");
+        $("waitingResetBtn").classList.add("hidden");
+        $("cancelBtn").classList.remove("hidden");
+        $("confirmBtn").classList.remove("hidden");
+        $("resultResetBtn").classList.add("hidden");
+        $("resultCopyBtn").classList.add("hidden");
+      }
+
+      function showResultButtons() {
+        $("scanBtn").classList.add("hidden");
+        $("waitingResetBtn").classList.add("hidden");
+        $("cancelBtn").classList.add("hidden");
+        $("confirmBtn").classList.add("hidden");
+        $("resultResetBtn").classList.remove("hidden");
+        $("resultCopyBtn").classList.remove("hidden");
+      }
+
       async function startScanning() {
-        const video = document.getElementById("video");
-        const placeholder = document.getElementById("scanPlaceholder");
-        const overlay = document.getElementById("scannerOverlay");
+        const video = $("video");
+        const placeholder = $("scanPlaceholder");
+        const overlay = $("scannerOverlay");
 
         try {
           videoStream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: "environment" },
+            audio: false,
           });
 
           video.srcObject = videoStream;
 
           // Hide placeholder, show video and overlay
-          placeholder.style.display = "none";
+          placeholder.classList.add("hidden");
           video.classList.add("active");
-          overlay.style.display = "block";
+          overlay.classList.remove("hidden");
+
+          // Show scanning buttons
+          showScanningButtons();
         } catch (error) {
           console.error("Camera access error:", error);
-          alert("无法访问摄像头，请确保已授予权限");
+          alert("Camera access denied. Please check your camera permissions.");
         }
       }
 
       function captureAndDecode() {
-        const video = document.getElementById("video");
-        const canvas = document.getElementById("canvas");
-        const scanResult = document.getElementById("scanResult");
-        const overlay = document.getElementById("scannerOverlay");
+        const video = $("video");
+        const canvas = $("canvas");
+        const scanResult = $("scanResult");
+        const overlay = $("scannerOverlay");
 
         // Set canvas size to match video
         canvas.width = video.videoWidth;
@@ -921,7 +1014,7 @@
         // Show canvas, hide video and overlay
         canvas.classList.add("active");
         video.classList.remove("active");
-        overlay.style.display = "none";
+        overlay.classList.add("hidden");
 
         // Stop video stream
         if (videoStream) {
@@ -945,15 +1038,18 @@
 
         if (code) {
           scanResult.textContent = code.data;
+          showResultButtons();
         } else {
-          alert("未检测到二维码，请调整角度后重试");
+          alert("QR code not detected. Please adjust the angle and retry.");
+          reloadPage();
         }
       }
 
       function stopScanning() {
-        const video = document.getElementById("video");
-        const placeholder = document.getElementById("scanPlaceholder");
-        const overlay = document.getElementById("scannerOverlay");
+        const video = $("video");
+        const placeholder = $("scanPlaceholder");
+        const overlay = $("scannerOverlay");
+        const canvas = $("canvas");
 
         // Stop video stream
         if (videoStream) {
@@ -963,20 +1059,24 @@
 
         video.srcObject = null;
 
-        // Show placeholder, hide video and overlay
-        placeholder.style.display = "block";
+        // Show placeholder, hide video, overlay and canvas
+        placeholder.classList.remove("hidden");
         video.classList.remove("active");
-        overlay.style.display = "none";
+        canvas.classList.remove("active");
+        overlay.classList.add("hidden");
+
+        // Show waiting buttons
+        showWaitingButtons();
       }
 
       function copyResult() {
-        const scanResult = document.getElementById("scanResult");
+        const scanResult = $("scanResult");
         const text = scanResult.textContent;
 
         navigator.clipboard
           .writeText(text)
           .then(() => {
-            alert("✅ 已复制到剪贴板");
+            alert("✅ Copied");
           })
           .catch((error) => {
             console.error("Copy failed:", error);
@@ -989,26 +1089,12 @@
             textarea.select();
             document.execCommand("copy");
             document.body.removeChild(textarea);
-            alert("✅ 已复制到剪贴板");
+            alert("✅ Copied");
           });
       }
 
-      function resetQrScanAreaState() {
-        const scanResult = document.getElementById("scanResult");
-        const placeholder = document.getElementById("scanPlaceholder");
-        const video = document.getElementById("video");
-        const overlay = document.getElementById("scannerOverlay");
-
-        // Stop any active scanning
-        stopScanning();
-
-        // Clear scan result
-        scanResult.textContent = "";
-
-        // Reset to initial state
-        placeholder.style.display = "block";
-        video.classList.remove("active");
-        overlay.style.display = "none";
+      function reloadPage() {
+        window.location.reload();
       }
 
       // ========================================
@@ -1017,6 +1103,16 @@
       document.addEventListener("contextmenu", function (e) {
         e.preventDefault();
         return false;
+      });
+
+      // ========================================
+      // Character counter for text input
+      // ========================================
+      const textInput = $("textInput");
+      const charCount = $("charCount");
+
+      textInput.addEventListener("input", function () {
+        charCount.textContent = textInput.value.length;
       });
 
       // ========================================
