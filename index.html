@@ -819,7 +819,7 @@
         left: 50%;
         transform: translateX(-50%);
         background: var(--surface);
-        color: var(--foreground);
+        color: var(--text-muted);
         padding: var(--spacing-xs) var(--spacing-lg);
         border-radius: var(--radius-md);
         box-shadow: var(--shadow-lg);
@@ -1810,7 +1810,7 @@
 
         // Set message and type
         toast.textContent = message;
-        toast.className = `toast toast-${type}`;
+        toast.className = `toast toast-${type} text-muted`;
 
         // Show toast with animation
         setTimeout(() => {
