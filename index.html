@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
     <title>Reed</title>
     <meta
       name="description"
@@ -31,7 +31,10 @@
       content="By encrypting one end to generate a QR code and scanning the code to decrypt it on the other end, point-to-point secure transmission without the need for a network or a transfer server is achieved."
     />
     <meta property="og:url" content="https://reed.testbug.cc" />
-    <meta property="og:image" content="https://reed.testbug.cc/logo.png" />
+    <meta
+      property="og:image"
+      content="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/logo.png"
+    />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary" />
@@ -40,7 +43,10 @@
       name="twitter:description"
       content="By encrypting one end to generate a QR code and scanning the code to decrypt it on the other end, point-to-point secure transmission without the need for a network or a transfer server is achieved."
     />
-    <meta name="twitter:image" content="https://reed.testbug.cc/logo.png" />
+    <meta
+      name="twitter:image"
+      content="https://cdn.jsdelivr.net/gh/Pony-Unicorn/reed/logo.png"
+    />
 
     <!-- Performance -->
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
@@ -76,6 +82,9 @@
          Based on logo.png colors
          ======================================== */
       :root {
+        /* Color Scheme Support */
+        color-scheme: light dark;
+
         /* Primary - Blue (from water waves) */
         --primary-50: #eff6ff;
         --primary-100: #dbeafe;
@@ -112,11 +121,14 @@
         --neutral-800: #292524;
         --neutral-900: #1c1917;
 
-        /* Semantic Colors */
-        --background: var(--neutral-50);
+        /* Semantic Colors - Light Theme (slightly darker) */
+        --background: var(--neutral-100);
         --foreground: var(--neutral-900);
-        --surface: #ffffff;
-        --border: var(--neutral-200);
+        --surface: var(--neutral-50);
+        --border: var(--neutral-300);
+        --text-primary: var(--neutral-900);
+        --text-secondary: var(--neutral-700);
+        --text-muted: var(--neutral-500);
 
         /* Functional Colors */
         --success: var(--accent-500);
@@ -144,6 +156,46 @@
         --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      /* ========================================
+         Dark Theme (Auto-adaptive & Manual)
+         ======================================== */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          /* Semantic Colors - Dark Theme */
+          --background: var(--neutral-900);
+          --foreground: var(--neutral-100);
+          --surface: var(--neutral-800);
+          --border: var(--neutral-700);
+          --text-primary: var(--neutral-50);
+          --text-secondary: var(--neutral-300);
+          --text-muted: var(--neutral-500);
+
+          /* Adjust shadows for dark theme */
+          --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+          --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+          --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+          --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+        }
+      }
+
+      /* Manual dark theme toggle */
+      [data-theme="dark"] {
+        /* Semantic Colors - Dark Theme */
+        --background: var(--neutral-900);
+        --foreground: var(--neutral-100);
+        --surface: var(--neutral-800);
+        --border: var(--neutral-700);
+        --text-primary: var(--neutral-50);
+        --text-secondary: var(--neutral-300);
+        --text-muted: var(--neutral-500);
+
+        /* Adjust shadows for dark theme */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
       }
 
       /* ========================================
@@ -238,11 +290,11 @@
       }
 
       .text-muted {
-        color: var(--neutral-400);
+        color: var(--text-muted);
       }
 
       .text-secondary {
-        color: var(--neutral-500);
+        color: var(--text-secondary);
       }
 
       /* ========================================
@@ -386,6 +438,34 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 var(--spacing-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .theme-toggle-btn {
+        background: transparent;
+        border: 2px solid var(--border);
+        border-radius: var(--radius-full);
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.25rem;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+      }
+
+      .theme-toggle-btn:hover {
+        background-color: var(--surface);
+        border-color: var(--primary-500);
+        transform: scale(1.05);
+      }
+
+      .theme-toggle-btn:active {
+        transform: scale(0.95);
       }
 
       .logo {
@@ -402,7 +482,7 @@
         justify-content: center;
         align-items: center;
         min-height: 306px;
-        background-color: var(--neutral-50);
+        background-color: var(--surface);
         border-radius: var(--radius-md);
         border: 2px dashed var(--border);
         /* Security: Prevent text selection and copying */
@@ -440,7 +520,7 @@
         justify-content: center;
         align-items: center;
         min-height: 306px;
-        background-color: var(--neutral-50);
+        background-color: var(--surface);
         border-radius: var(--radius-md);
         border: 2px dashed var(--border);
       }
@@ -537,8 +617,8 @@
         height: 300px;
         background: repeating-linear-gradient(
           0deg,
-          rgba(0, 0, 0, 0.85) 0px,
-          rgba(0, 0, 0, 0.85) 12px,
+          rgba(0, 0, 0, 1) 0px,
+          rgba(0, 0, 0, 1) 12px,
           transparent 12px,
           transparent 24px
         );
@@ -849,6 +929,15 @@
             </p>
           </div>
         </div>
+        <button
+          id="themeToggle"
+          class="theme-toggle-btn"
+          onclick="toggleTheme()"
+          title="Toggle theme"
+          aria-label="Toggle color theme"
+        >
+          <span id="themeIcon">🌙</span>
+        </button>
       </div>
     </header>
 
@@ -1982,6 +2071,76 @@
           videoStream.getTracks().forEach((track) => track.stop());
         }
       });
+
+      // ========================================
+      // Theme Toggle Functionality
+      // ========================================
+      function getPreferredTheme() {
+        // Check localStorage first (with Safari private mode protection)
+        try {
+          const savedTheme = localStorage.getItem("theme");
+          if (savedTheme) {
+            return savedTheme;
+          }
+        } catch (e) {
+          // Safari private mode or localStorage disabled
+          console.warn("localStorage not available:", e.name);
+        }
+
+        // Fall back to system preference
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      }
+
+      function setTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+
+        // Save to localStorage (with Safari private mode protection)
+        try {
+          localStorage.setItem("theme", theme);
+        } catch (e) {
+          // Safari private mode: QuotaExceededError
+          // User can still switch themes, just won't persist on refresh
+          console.warn("localStorage not available:", e.name);
+        }
+
+        // Update icon
+        const icon = $("themeIcon");
+        icon.textContent = theme === "dark" ? "☀️" : "🌙";
+      }
+
+      function toggleTheme() {
+        const currentTheme =
+          document.documentElement.getAttribute("data-theme") ||
+          getPreferredTheme();
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+      }
+
+      // Initialize theme on page load
+      (function initTheme() {
+        const theme = getPreferredTheme();
+        setTheme(theme);
+      })();
+
+      // Listen for system theme changes
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          // Only auto-switch if user hasn't manually set a preference
+          let hasManualTheme = false;
+          try {
+            hasManualTheme = !!localStorage.getItem("theme");
+          } catch (e) {
+            // Safari private mode or localStorage disabled
+            console.warn("localStorage not available:", e.name);
+          }
+
+          if (!hasManualTheme) {
+            setTheme(e.matches ? "dark" : "light");
+          }
+        });
     </script>
 
     <!-- Toast Notification -->
