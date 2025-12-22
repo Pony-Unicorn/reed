@@ -890,7 +890,7 @@
                 type="text"
                 id="otpInput"
                 class="input otp-input"
-                placeholder="Enter OTP (e.g., 042-067-089-012-045-078)"
+                placeholder="Enter OTP (e.g., 42-67-89-12-45-78)"
                 autocomplete="off"
                 spellcheck="false"
               />
@@ -1188,37 +1188,6 @@
         }
       }
 
-      // ========================================
-      // Section B: Scan QR Code
-      // ========================================
-      // Button state management
-      function showWaitingButtons() {
-        $("scanBtn").classList.remove("hidden");
-        $("waitingResetBtn").classList.remove("hidden");
-        $("cancelBtn").classList.add("hidden");
-        $("confirmBtn").classList.add("hidden");
-        $("resultResetBtn").classList.add("hidden");
-        $("resultCopyBtn").classList.add("hidden");
-      }
-
-      function showScanningButtons() {
-        $("scanBtn").classList.add("hidden");
-        $("waitingResetBtn").classList.add("hidden");
-        $("cancelBtn").classList.remove("hidden");
-        $("confirmBtn").classList.remove("hidden");
-        $("resultResetBtn").classList.add("hidden");
-        $("resultCopyBtn").classList.add("hidden");
-      }
-
-      function showResultButtons() {
-        $("scanBtn").classList.add("hidden");
-        $("waitingResetBtn").classList.add("hidden");
-        $("cancelBtn").classList.add("hidden");
-        $("confirmBtn").classList.add("hidden");
-        $("resultResetBtn").classList.remove("hidden");
-        $("resultCopyBtn").classList.remove("hidden");
-      }
-
       async function startScanning() {
         const video = $("video");
         const placeholder = $("scanPlaceholder");
@@ -1341,7 +1310,6 @@
 
         try {
           // Parse OTP string to array of numbers
-          // Expected format: "042-067-089-012-045-078"
           const otpParts = otpString.split("-");
           if (otpParts.length !== 6) {
             showToast("Invalid OTP format", "error");
@@ -1451,6 +1419,37 @@
             document.body.removeChild(textarea);
             showToast("Copied!", "success", 2000);
           });
+      }
+
+      // ========================================
+      // Section B: Scan QR Code
+      // ========================================
+      // Button state management
+      function showWaitingButtons() {
+        $("scanBtn").classList.remove("hidden");
+        $("waitingResetBtn").classList.remove("hidden");
+        $("cancelBtn").classList.add("hidden");
+        $("confirmBtn").classList.add("hidden");
+        $("resultResetBtn").classList.add("hidden");
+        $("resultCopyBtn").classList.add("hidden");
+      }
+
+      function showScanningButtons() {
+        $("scanBtn").classList.add("hidden");
+        $("waitingResetBtn").classList.add("hidden");
+        $("cancelBtn").classList.remove("hidden");
+        $("confirmBtn").classList.remove("hidden");
+        $("resultResetBtn").classList.add("hidden");
+        $("resultCopyBtn").classList.add("hidden");
+      }
+
+      function showResultButtons() {
+        $("scanBtn").classList.add("hidden");
+        $("waitingResetBtn").classList.add("hidden");
+        $("cancelBtn").classList.add("hidden");
+        $("confirmBtn").classList.add("hidden");
+        $("resultResetBtn").classList.remove("hidden");
+        $("resultCopyBtn").classList.remove("hidden");
       }
 
       function reloadPage() {
