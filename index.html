@@ -606,8 +606,41 @@
         color: var(--primary-700);
       }
 
-      .otp-input {
+      .otp-inputs {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: nowrap;
+        justify-content: center;
+      }
+
+      .otp-digit-input {
+        width: 32px;
+        height: 44px;
+        text-align: center;
+        font-size: 1.125rem;
+        font-weight: 600;
         font-family: monospace;
+        border: 2px solid var(--border);
+        border-radius: var(--radius-md);
+        background-color: var(--surface);
+        color: var(--text-primary);
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+
+      .otp-digit-input:focus {
+        outline: none;
+        border-color: var(--primary-500);
+        box-shadow: 0 0 0 3px var(--primary-100);
+      }
+
+      .otp-separator {
+        color: var(--text-secondary);
+        font-weight: bold;
+        font-size: 1.25rem;
+        user-select: none;
+        flex-shrink: 0;
       }
 
       /* ========================================
@@ -883,23 +916,92 @@
 
             <!-- Decryption Options -->
             <div id="decryptionPanel" class="hidden flex flex-col gap-sm">
-              <div class="text-sm font-semibold decrypt-header">
-                🔓 Encrypted content detected
+              <div class="otp-inputs">
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp0"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp1"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp2"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp3"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
+                <span class="otp-separator">-</span>
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp4"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp5"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp6"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
+                <input
+                  type="text"
+                  maxlength="1"
+                  pattern="[0-9]"
+                  inputmode="numeric"
+                  id="otp7"
+                  class="otp-digit-input"
+                  autocomplete="off"
+                />
               </div>
-              <input
-                type="text"
-                id="otpInput"
-                class="input otp-input"
-                placeholder="Enter OTP (e.g., 42-67-89-12-45-78)"
-                autocomplete="off"
-                spellcheck="false"
-              />
-              <button
-                class="btn btn-accent-solid btn-sm"
-                onclick="decryptResult()"
-              >
-                🔓 Decrypt
-              </button>
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-semibold decrypt-header">
+                  🔓 Enter 8-digit OTP
+                </div>
+                <button
+                  class="btn btn-accent-solid btn-sm"
+                  onclick="decryptResult()"
+                >
+                  🔓 Decrypt
+                </button>
+              </div>
             </div>
 
             <div class="result-wrapper">
@@ -1264,8 +1366,8 @@
           }
           video.srcObject = null;
 
-          // Check if content is encrypted (starts with "v1.")
-          const isEncrypted = code.data.startsWith("v1.");
+          // Check if content is encrypted (starts with "reed:v1.")
+          const isEncrypted = code.data.startsWith("reed:v1.");
 
           if (isEncrypted) {
             // Store encrypted content and show decryption panel
@@ -1291,17 +1393,9 @@
       }
 
       async function decryptResult() {
-        const otpInput = $("otpInput");
         const scanResult = $("scanResult");
         const resultPlaceholder = $("resultPlaceholder");
         const decryptionPanel = $("decryptionPanel");
-
-        const otpString = otpInput.value.trim();
-
-        if (!otpString) {
-          showToast("Enter OTP", "warning");
-          return;
-        }
 
         if (!encryptedContent) {
           showToast("No encrypted content", "error");
@@ -1309,20 +1403,27 @@
         }
 
         try {
-          // Parse OTP string to array of numbers
-          const otpParts = otpString.split("-");
-          if (otpParts.length !== 6) {
-            showToast("Invalid OTP format", "error");
-            return;
-          }
+          // Collect OTP from 8 input boxes
+          const otpNums = [];
+          for (let i = 0; i < 8; i++) {
+            const input = $(`otp${i}`);
+            const value = input.value.trim();
 
-          const otpNums = otpParts.map((part) => {
-            const num = parseInt(part, 10);
-            if (isNaN(num) || num < 0 || num > 99) {
-              throw new Error("Invalid OTP number");
+            if (!value) {
+              showToast(`Enter all 8 digits`, "warning");
+              input.focus();
+              return;
             }
-            return num;
-          });
+
+            const num = parseInt(value, 10);
+            if (isNaN(num) || num < 0 || num > 9) {
+              showToast("Invalid digit", "error");
+              input.focus();
+              return;
+            }
+
+            otpNums.push(num);
+          }
 
           // Decrypt the content
           const decryptedText = await decryptOnce(encryptedContent, otpNums);
@@ -1338,8 +1439,10 @@
           // Show toggle visibility button
           $("toggleResultBtn").classList.remove("hidden");
 
-          // Clear OTP input for security
-          otpInput.value = "";
+          // Clear all OTP inputs for security
+          for (let i = 0; i < 8; i++) {
+            $(`otp${i}`).value = "";
+          }
 
           showToast("Decrypted!", "success", 2000);
         } catch (error) {
@@ -1556,13 +1659,16 @@
       // OTP
       // =======================
       function generateOtp() {
-        const arr = new Uint16Array(6);
+        const arr = new Uint8Array(8);
         crypto.getRandomValues(arr);
-        return Array.from(arr, (x) => x % 100);
+        return Array.from(arr, (x) => x % 10);
       }
 
       function otpToString(nums) {
-        return nums.map((n) => String(n).padStart(2, "0")).join("-");
+        // Format as 1234-5678 (two groups of 4 digits)
+        const first = nums.slice(0, 4).join("");
+        const second = nums.slice(4, 8).join("");
+        return `${first}-${second}`;
       }
 
       // =======================
@@ -1604,7 +1710,7 @@
         );
 
         return [
-          "v1",
+          "reed:v1",
           b64encode(salt.buffer),
           b64encode(iv.buffer),
           b64encode(ct),
@@ -1613,7 +1719,7 @@
 
       async function decryptOnce(packed, otpNums) {
         const [ver, saltB64, ivB64, ctB64] = packed.split(".");
-        if (ver !== "v1") throw new Error("Unsupported version");
+        if (ver !== "reed:v1") throw new Error("Unsupported format");
 
         const salt = new Uint8Array(b64decode(saltB64));
         const iv = new Uint8Array(b64decode(ivB64));
@@ -1647,6 +1753,77 @@
       textInput.addEventListener("input", function () {
         charCount.textContent = textInput.value.length;
       });
+
+      // ========================================
+      // OTP Input Auto-focus and Navigation
+      // ========================================
+      function initOtpInputs() {
+        for (let i = 0; i < 8; i++) {
+          const input = $(`otp${i}`);
+
+          // Auto-focus to next input on digit entry
+          input.addEventListener("input", function (e) {
+            const value = e.target.value;
+
+            // Only allow single digit 0-9
+            if (value.length > 1) {
+              e.target.value = value.charAt(0);
+            }
+
+            // Validate digit
+            if (value && !/^[0-9]$/.test(value)) {
+              e.target.value = "";
+              return;
+            }
+
+            // Auto-focus next input if digit entered
+            if (value && i < 7) {
+              $(`otp${i + 1}`).focus();
+            }
+          });
+
+          // Handle backspace and navigation
+          input.addEventListener("keydown", function (e) {
+            // Backspace: clear current or move to previous
+            if (e.key === "Backspace") {
+              if (!e.target.value && i > 0) {
+                e.preventDefault();
+                $(`otp${i - 1}`).focus();
+              }
+            }
+            // Arrow left: move to previous
+            else if (e.key === "ArrowLeft" && i > 0) {
+              e.preventDefault();
+              $(`otp${i - 1}`).focus();
+            }
+            // Arrow right: move to next
+            else if (e.key === "ArrowRight" && i < 7) {
+              e.preventDefault();
+              $(`otp${i + 1}`).focus();
+            }
+          });
+
+          // Handle paste
+          input.addEventListener("paste", function (e) {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData("text").trim();
+
+            // Remove dashes and spaces
+            const digits = pastedData.replace(/[-\s]/g, "");
+
+            // Validate and fill inputs
+            if (/^\d{8}$/.test(digits)) {
+              for (let j = 0; j < 8; j++) {
+                $(`otp${j}`).value = digits.charAt(j);
+              }
+              $("otp7").focus();
+            }
+          });
+        }
+      }
+
+      // Initialize OTP inputs
+      initOtpInputs();
 
       // ========================================
       // Cleanup on page unload
