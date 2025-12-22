@@ -225,9 +225,3 @@ KxenEcyg2JtMSJmLCNWDJeNBthLjACtv7Je1eERn8qYLhJitigaP
 ---
 
 **Made with ❤️ for Privacy**
-
----
-
-## 📋 开发路线图
-
-- ⏳ 请认真的 review 一下代码，查看下漏洞、bug、以及兼容性问题（兼容到 20 年以后的浏机型览器即可）
