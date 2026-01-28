@@ -779,7 +779,7 @@
       }
 
       .faq-answer {
-        color: var(--neutral-600);
+        color: var(--text-secondary);
         line-height: 1.8;
       }
 
@@ -1166,14 +1166,28 @@
               </div>
             </div>
 
-            <div class="flex gap-sm mt-md justify-between">
-              <!-- Waiting State: Scan + Reset -->
+            <div class="flex gap-sm mt-md justify-between flex-wrap">
+              <!-- Waiting State: Scan + Upload + Reset -->
               <button
                 id="waitingResetBtn"
                 class="btn btn-neutral-outline btn-sm"
                 onclick="reloadPage()"
               >
                 🗑️ Reset
+              </button>
+              <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+                style="display: none"
+                onchange="handleImageUpload(event)"
+              />
+              <button
+                id="uploadBtn"
+                class="btn btn-primary-soft btn-sm"
+                onclick="document.getElementById('imageInput').click()"
+              >
+                🖼️ Upload
               </button>
               <button
                 id="scanBtn"
@@ -1513,6 +1527,100 @@
         }
       }
 
+      // ========================================
+      // Image Upload and QR Code Recognition
+      // ========================================
+      function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith("image/")) {
+          showToast("Please select an image file", "error");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = new Image();
+          img.onload = function () {
+            decodeQRFromImage(img);
+          };
+          img.onerror = function () {
+            showToast("Failed to load image", "error");
+          };
+          img.src = e.target.result;
+        };
+        reader.onerror = function () {
+          showToast("Failed to read file", "error");
+        };
+        reader.readAsDataURL(file);
+
+        // Clear input for re-uploading same file
+        event.target.value = "";
+      }
+
+      function decodeQRFromImage(img) {
+        const canvas = $("canvas");
+        const scanResult = $("scanResult");
+        const resultPlaceholder = $("resultPlaceholder");
+        const placeholder = $("scanPlaceholder");
+        const video = $("video");
+        const overlay = $("scannerOverlay");
+
+        // Set canvas size to match image
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Draw image to canvas with enhanced contrast
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        context.filter = "contrast(120%) brightness(105%)";
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        context.filter = "none";
+
+        // Get image data
+        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+        // Decode QR code using jsQR
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "attemptBoth",
+        });
+
+        if (code) {
+          // Success - show canvas and result
+          placeholder.classList.add("hidden");
+          video.classList.remove("active");
+          canvas.classList.add("active");
+          overlay.classList.add("hidden");
+
+          // Show privacy overlay
+          $("canvasPrivacyOverlay").classList.remove("hidden");
+
+          // Check if content is encrypted
+          const isEncrypted = code.data.startsWith("reed:v1.");
+
+          if (isEncrypted) {
+            encryptedContent = code.data;
+            $("decryptionPanel").classList.remove("hidden");
+            resultPlaceholder.textContent = "Enter OTP to decrypt...";
+          } else {
+            resultPlaceholder.classList.add("hidden");
+            scanResult.classList.remove("hidden");
+            scanResult.classList.add("content-hidden");
+            scanResult.textContent = code.data;
+
+            $("toggleResultBtn").classList.remove("hidden");
+            $("toggleResultBtn").textContent = "👁️‍🗨️";
+            $("toggleResultBtn").title = "Show content";
+          }
+
+          showResultButtons();
+          showToast("QR code recognized!", "success", 2000);
+        } else {
+          showToast("No QR code found in image", "warning", 3000);
+        }
+      }
+
       async function startScanning() {
         const video = $("video");
         const placeholder = $("scanPlaceholder");
@@ -1768,6 +1876,7 @@
       // Button state management
       function showWaitingButtons() {
         $("scanBtn").classList.remove("hidden");
+        $("uploadBtn").classList.remove("hidden");
         $("waitingResetBtn").classList.remove("hidden");
         $("cancelBtn").classList.add("hidden");
         $("confirmBtn").classList.add("hidden");
@@ -1777,6 +1886,7 @@
 
       function showScanningButtons() {
         $("scanBtn").classList.add("hidden");
+        $("uploadBtn").classList.add("hidden");
         $("waitingResetBtn").classList.add("hidden");
         $("cancelBtn").classList.remove("hidden");
         $("confirmBtn").classList.remove("hidden");
@@ -1786,6 +1896,7 @@
 
       function showResultButtons() {
         $("scanBtn").classList.add("hidden");
+        $("uploadBtn").classList.add("hidden");
         $("waitingResetBtn").classList.add("hidden");
         $("cancelBtn").classList.add("hidden");
         $("confirmBtn").classList.add("hidden");
