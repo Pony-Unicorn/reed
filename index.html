@@ -1,611 +1,53 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <meta name="color-scheme" content="light dark" />
-    <title>Reed</title>
+    <title>Reed — End-to-End Encrypted Transfer</title>
     <meta
       name="description"
       content="Secure peer-to-peer transfer tool for end-to-end encrypted transmission of passwords, private keys, mnemonics, and files"
     />
 
-    <!-- SEO & Meta -->
-    <meta
-      name="keywords"
-      content="end-to-end encryption,secure transfer,p2p,password sharing,private key transfer"
-    />
-    <meta name="author" content="Reed Contributors" />
-
-    <!-- Security & Privacy -->
-    <meta name="referrer" content="no-referrer" />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Reed — End-to-End Encrypted Transfer" />
-    <meta
-      property="og:description"
-      content="By encrypting one end to generate a QR code and scanning the code to decrypt it on the other end, point-to-point secure transmission without the need for a network or a transfer server is achieved."
-    />
-    <meta property="og:url" content="https://reed.testbug.cc" />
-    <meta property="og:image" content="./logo.png" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Reed — End-to-End Encrypted Transfer" />
-    <meta
-      name="twitter:description"
-      content="By encrypting one end to generate a QR code and scanning the code to decrypt it on the other end, point-to-point secure transmission without the need for a network or a transfer server is achieved."
-    />
-    <meta name="twitter:image" content="./logo.png" />
-
-    <!-- Performance -->
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <!-- 1. DaisyUI CSS -->
     <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./favicon-32x32.png"
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
     />
     <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./favicon-16x16.png"
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
     />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="./apple-touch-icon.png"
-    />
+
+    <!-- 2. Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- 3. Alpine.js -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.8/dist/cdn.min.js"
+    ></script>
+
+    <!-- 4. Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.0/dist/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
     <style>
-      /* ========================================
-         CSS Variables - Color System
-         Based on logo.png colors
-         ======================================== */
-      :root {
-        /* Color Scheme Support */
-        color-scheme: light dark;
-
-        /* Primary - Blue (from water waves) */
-        --primary-50: #eff6ff;
-        --primary-100: #dbeafe;
-        --primary-200: #bfdbfe;
-        --primary-300: #93c5fd;
-        --primary-400: #60a5fa;
-        --primary-500: #3b82f6;
-        --primary-600: #2563eb;
-        --primary-700: #1d4ed8;
-        --primary-800: #1e40af;
-        --primary-900: #1e3a8a;
-
-        /* Accent - Green (from reed leaves) */
-        --accent-50: #ecfdf5;
-        --accent-100: #d1fae5;
-        --accent-200: #a7f3d0;
-        --accent-300: #6ee7b7;
-        --accent-400: #34d399;
-        --accent-500: #10b981;
-        --accent-600: #059669;
-        --accent-700: #047857;
-        --accent-800: #065f46;
-        --accent-900: #064e3b;
-
-        /* Neutral - Brown/Gray (from reed stems) */
-        --neutral-50: #fafaf9;
-        --neutral-100: #f5f5f4;
-        --neutral-200: #e7e5e4;
-        --neutral-300: #d6d3d1;
-        --neutral-400: #a8a29e;
-        --neutral-500: #78716c;
-        --neutral-600: #57534e;
-        --neutral-700: #44403c;
-        --neutral-800: #292524;
-        --neutral-900: #1c1917;
-
-        /* Semantic Colors - Light Theme (slightly darker) */
-        --background: var(--neutral-100);
-        --foreground: var(--neutral-900);
-        --surface: var(--neutral-50);
-        --border: var(--neutral-300);
-        --text-primary: var(--neutral-900);
-        --text-secondary: var(--neutral-700);
-        --text-muted: var(--neutral-500);
-
-        /* Functional Colors */
-        --success: var(--accent-500);
-        --warning: #f59e0b;
-        --error: #ef4444;
-        --info: var(--primary-500);
-
-        /* Spacing */
-        --spacing-xs: 0.25rem;
-        --spacing-sm: 0.5rem;
-        --spacing-md: 1rem;
-        --spacing-lg: 1.5rem;
-        --spacing-xl: 2rem;
-        --spacing-2xl: 3rem;
-
-        /* Border Radius */
-        --radius-sm: 0.25rem;
-        --radius-md: 0.5rem;
-        --radius-lg: 0.75rem;
-        --radius-xl: 1rem;
-        --radius-full: 9999px;
-
-        /* Shadows */
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      }
-
-      /* ========================================
-         Dark Theme (Auto-adaptive & Manual)
-         ======================================== */
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          /* Semantic Colors - Dark Theme */
-          --background: var(--neutral-900);
-          --foreground: var(--neutral-100);
-          --surface: var(--neutral-800);
-          --border: var(--neutral-700);
-          --text-primary: var(--neutral-50);
-          --text-secondary: var(--neutral-300);
-          --text-muted: var(--neutral-500);
-
-          /* Adjust shadows for dark theme */
-          --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-          --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-          --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-          --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
-        }
-      }
-
-      /* Manual dark theme toggle */
-      [data-theme="dark"] {
-        /* Semantic Colors - Dark Theme */
-        --background: var(--neutral-900);
-        --foreground: var(--neutral-100);
-        --surface: var(--neutral-800);
-        --border: var(--neutral-700);
-        --text-primary: var(--neutral-50);
-        --text-secondary: var(--neutral-300);
-        --text-muted: var(--neutral-500);
-
-        /* Adjust shadows for dark theme */
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
-      }
-
-      /* ========================================
-         Reset & Base Styles
-         ======================================== */
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          "Helvetica Neue", Arial, sans-serif;
-        line-height: 1.6;
-        color: var(--foreground);
-        background-color: var(--background);
-        min-height: 100vh;
-      }
-
-      /* ========================================
-         Layout Utilities
-         ======================================== */
-      .flex {
-        display: flex;
-      }
-
-      .flex-col {
-        flex-direction: column;
-      }
-
-      .flex-wrap {
-        flex-wrap: wrap;
-      }
-
-      .items-center {
-        align-items: center;
-      }
-
-      .justify-between {
-        justify-content: space-between;
-      }
-
-      .gap-sm {
-        gap: var(--spacing-sm);
-      }
-      .gap-md {
-        gap: var(--spacing-md);
-      }
-      .gap-xl {
-        gap: var(--spacing-xl);
-      }
-
-      .grid {
-        display: grid;
-      }
-
-      .grid-cols-1 {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-      }
-
-      /* ========================================
-         Spacing Utilities
-         ======================================== */
-      .mt-xs {
-        margin-top: var(--spacing-xs);
-      }
-      .mt-md {
-        margin-top: var(--spacing-md);
-      }
-      .mb-lg {
-        margin-bottom: var(--spacing-lg);
-      }
-
-      /* ========================================
-         Typography
-         ======================================== */
-      .text-sm {
-        font-size: 0.875rem;
-      }
-      .text-2xl {
-        font-size: 1.5rem;
-      }
-
-      .font-semibold {
-        font-weight: 600;
-      }
-      .font-bold {
-        font-weight: 700;
-      }
-
-      .text-muted {
-        color: var(--text-muted);
-      }
-
-      .text-secondary {
-        color: var(--text-secondary);
-      }
-
-      /* ========================================
-         Display & Visibility Utilities
-         ======================================== */
-      .hidden {
-        display: none !important;
-      }
-
-      /* ========================================
-         Margin Utilities
-         ======================================== */
-      .m-0 {
-        margin: 0;
-      }
-
-      /* ========================================
-         Button Component with Variants
-         ======================================== */
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--spacing-sm);
-        padding: var(--spacing-sm) var(--spacing-lg);
-        font-size: 1rem;
-        font-weight: 500;
-        line-height: 1.5;
-        border-radius: var(--radius-md);
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        white-space: nowrap;
-      }
-
-      .btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      .btn-sm {
-        padding: var(--spacing-xs) var(--spacing-md);
-        font-size: 0.875rem;
-      }
-
-      /* Primary Button Variants */
-      .btn-primary-solid {
-        background-color: var(--primary-600);
-        color: white;
-      }
-      .btn-primary-solid:hover:not(:disabled) {
-        background-color: var(--primary-700);
-      }
-
-      .btn-primary-soft {
-        background-color: var(--primary-100);
-        color: var(--primary-700);
-      }
-      .btn-primary-soft:hover:not(:disabled) {
-        background-color: var(--primary-200);
-      }
-
-      /* Accent Button Variants */
-      .btn-accent-solid {
-        background-color: var(--accent-600);
-        color: white;
-      }
-      .btn-accent-solid:hover:not(:disabled) {
-        background-color: var(--accent-700);
-      }
-
-      /* Neutral Button Variants */
-      .btn-neutral-outline {
-        background-color: transparent;
-        color: var(--neutral-600);
-        border-color: var(--neutral-600);
-      }
-      .btn-neutral-outline:hover:not(:disabled) {
-        background-color: var(--neutral-50);
-      }
-
-      /* ========================================
-         Card Component
-         ======================================== */
-      .card {
-        background-color: var(--surface);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-        padding: var(--spacing-sm);
-      }
-
-      /* ========================================
-         Input Component
-         ======================================== */
-      .input {
-        width: 100%;
-        padding: var(--spacing-sm) var(--spacing-md);
-        font-size: 1rem;
-        line-height: 1.5;
-        color: var(--foreground);
-        background-color: var(--surface);
-        border: 2px solid var(--border);
-        border-radius: var(--radius-md);
-        transition: all 0.2s ease;
-      }
-
-      .input:focus {
-        outline: none;
-        border-color: var(--primary-500);
-        box-shadow: 0 0 0 3px var(--primary-100);
-      }
-
-      .textarea {
-        min-height: 100px;
-        resize: vertical;
-        font-family: inherit;
-      }
-
-      /* ========================================
-         Container & Layout
-         ======================================== */
-      .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 16px auto;
-        padding: 0 var(--spacing-md);
-      }
-
-      /* ========================================
-         Header Styles
-         ======================================== */
-      .header {
-        padding: var(--spacing-sm) 0;
-        border-bottom: 1px solid var(--border);
-        background-color: var(--surface);
-      }
-      .header-inner {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 var(--spacing-md);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .theme-toggle-btn {
-        background: transparent;
-        border: 2px solid var(--border);
-        border-radius: var(--radius-full);
-        width: 44px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 1.25rem;
-        transition: all 0.3s ease;
-        flex-shrink: 0;
-      }
-
-      .theme-toggle-btn:hover {
-        background-color: var(--surface);
-        border-color: var(--primary-500);
-        transform: scale(1.05);
-      }
-
-      .theme-toggle-btn:active {
-        transform: scale(0.95);
-      }
-
-      .logo {
-        width: 48px;
-        height: 56px;
-      }
-
-      /* ========================================
-         Component Specific Styles
-         ======================================== */
-      .qr-display {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      /* Custom styles that are hard to do with pure Tailwind/DaisyUI */
+      .qr-display-area {
         min-height: 306px;
-        background-color: var(--surface);
-        border-radius: var(--radius-md);
-        border: 2px dashed var(--border);
-        /* Security: Prevent text selection and copying */
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
         user-select: none;
       }
-
-      #qrPlaceholder {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      #qrcode {
-        width: 300px;
-        height: 300px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      #qrcode canvas,
-      #qrcode img {
-        max-width: 100%;
-        height: auto;
-        border-radius: var(--radius-md);
-      }
-
-      .scanner-container {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      .scanner-container-area {
         min-height: 306px;
-        background-color: var(--surface);
-        border-radius: var(--radius-md);
-        border: 2px dashed var(--border);
       }
-
-      #scanPlaceholder {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      #video {
-        width: 300px;
-        height: 300px;
-        object-fit: contain;
-        background-color: var(--neutral-900);
-        display: none;
-      }
-
-      #video.active {
-        display: block;
-      }
-
-      #canvas {
-        width: 300px;
-        height: 300px;
-        object-fit: contain;
-        background-color: var(--neutral-900);
-        display: none;
-      }
-
-      #canvas.active {
-        display: block;
-      }
-
-      .scanner-overlay {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 300px;
-        height: 300px;
-        border: 3px solid var(--primary-500);
-        border-radius: var(--radius-lg);
-        pointer-events: none;
-      }
-
-      .scanner-corners {
-        position: absolute;
-        inset: -3px;
-      }
-
-      .scanner-corner {
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        border: 4px solid var(--primary-500);
-      }
-
-      .scanner-corner.top-left {
-        top: 0;
-        left: 0;
-        border-right: none;
-        border-bottom: none;
-      }
-
-      .scanner-corner.top-right {
-        top: 0;
-        right: 0;
-        border-left: none;
-        border-bottom: none;
-      }
-
-      .scanner-corner.bottom-left {
-        bottom: 0;
-        left: 0;
-        border-right: none;
-        border-top: none;
-      }
-
-      .scanner-corner.bottom-right {
-        bottom: 0;
-        right: 0;
-        border-left: none;
-        border-top: none;
-      }
-
       .canvas-privacy-overlay {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 300px;
-        height: 300px;
         background: repeating-linear-gradient(
           0deg,
           rgba(0, 0, 0, 1) 0px,
@@ -613,1640 +55,1060 @@
           transparent 12px,
           transparent 24px
         );
-        pointer-events: none;
-        z-index: 10;
-        border-radius: var(--radius-md);
+      }
+      [x-cloak] {
+        display: none !important;
       }
 
-      .result-box {
-        min-height: 100px;
-        padding: var(--spacing-md);
-        background-color: var(--accent-50);
-        border: 2px solid var(--accent-200);
-        border-radius: var(--radius-md);
-        word-break: break-all;
-      }
-
-      /* ========================================
-         Visibility Toggle Component
-         ======================================== */
-      .input-wrapper,
-      .result-wrapper {
-        position: relative;
-      }
-
-      .toggle-visibility-btn {
-        position: absolute;
-        top: var(--spacing-sm);
-        right: var(--spacing-sm);
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: var(--spacing-xs);
-        font-size: 1.25rem;
-        line-height: 1;
-        color: var(--neutral-500);
-        transition: color 0.2s ease;
-        z-index: 10;
-      }
-
-      .toggle-visibility-btn:hover {
-        color: var(--primary-600);
-      }
-
-      .toggle-visibility-btn:focus {
-        outline: 2px solid var(--primary-500);
-        outline-offset: 2px;
-        border-radius: var(--radius-sm);
-      }
-
-      /* Blur effect for hidden content */
-      .content-hidden {
-        filter: blur(8px);
-        user-select: none;
-        pointer-events: none;
-        transition: filter 0.2s ease;
-      }
-
-      .result-wrapper .toggle-visibility-btn {
-        top: var(--spacing-md);
-        right: var(--spacing-md);
-      }
-
-      /* ========================================
-         Encryption Component
-         ======================================== */
-      .otp-display {
-        color: var(--accent-700);
-        font-family: monospace;
-        font-size: 0.875rem;
-      }
-
-      .otp-toggle-btn {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 4px;
-        font-size: 1.125rem;
-        line-height: 1;
-        color: var(--neutral-500);
-        transition: color 0.2s ease;
-      }
-
-      .otp-toggle-btn:hover {
-        color: var(--primary-600);
-      }
-
-      .encrypt-checkbox {
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-      }
-
-      .encrypt-label {
-        cursor: pointer;
-      }
-
-      .decrypt-header {
-        color: var(--primary-700);
-      }
-
-      .otp-inputs {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: nowrap;
-        justify-content: center;
-      }
-
-      .otp-digit-input {
-        width: 32px;
-        height: 44px;
-        text-align: center;
-        font-size: 1.125rem;
-        font-weight: 600;
-        font-family: monospace;
-        border: 2px solid var(--border);
-        border-radius: var(--radius-md);
-        background-color: var(--surface);
-        color: var(--text-primary);
-        transition: all 0.2s;
-        flex-shrink: 0;
-      }
-
-      .otp-digit-input:focus {
-        outline: none;
-        border-color: var(--primary-500);
-        box-shadow: 0 0 0 3px var(--primary-100);
-      }
-
-      .otp-separator {
-        color: var(--text-secondary);
-        font-weight: bold;
-        font-size: 1.25rem;
-        user-select: none;
-        flex-shrink: 0;
-      }
-
-      /* ========================================
-         FAQ Component
-         ======================================== */
-      .faq-section {
-        background-color: var(--surface);
-        border-top: 1px solid var(--border);
-        padding: var(--spacing-2xl) 0;
-        margin-top: var(--spacing-2xl);
-      }
-
-      .faq-item {
-        margin-bottom: var(--spacing-xl);
-      }
-
-      .faq-question {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: var(--foreground);
-        margin-bottom: var(--spacing-sm);
-      }
-
-      .faq-answer {
-        color: var(--text-secondary);
-        line-height: 1.8;
-      }
-
-      .faq-answer ul {
-        margin: var(--spacing-sm) 0;
-        padding-left: var(--spacing-lg);
-      }
-
-      .faq-answer li {
-        margin-bottom: var(--spacing-xs);
-      }
-
-      .faq-contact {
-        display: flex;
-        gap: var(--spacing-lg);
-        flex-wrap: wrap;
-        margin-top: var(--spacing-md);
-      }
-
-      .faq-contact a {
-        color: var(--primary-600);
-        text-decoration: none;
-        transition: color 0.2s ease;
-      }
-
-      .faq-contact a:hover {
-        color: var(--primary-700);
-        text-decoration: underline;
-      }
-
-      /* ========================================
-         Toast Component
-         ======================================== */
-      .toast {
-        position: fixed;
-        top: var(--spacing-lg);
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--surface);
-        color: var(--text-muted);
-        padding: var(--spacing-xs) var(--spacing-lg);
-        border-radius: var(--radius-md);
-        box-shadow: var(--shadow-lg);
-        border: 1px solid var(--border);
-        z-index: 9999;
-        max-width: 90%;
-        width: auto;
-        min-width: 200px;
-        text-align: center;
-        font-size: 0.9375rem;
-        line-height: 1.5;
-        animation: toastSlideDown 0.3s ease;
-      }
-
-      @keyframes toastSlideDown {
-        from {
-          transform: translateX(-50%) translateY(-20px);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(-50%) translateY(0);
-          opacity: 1;
-        }
-      }
-
-      .toast.toast-hide {
-        animation: toastSlideUp 0.3s ease forwards;
-      }
-
-      @keyframes toastSlideUp {
-        from {
-          transform: translateX(-50%) translateY(0);
-          opacity: 1;
-        }
-        to {
-          transform: translateX(-50%) translateY(-20px);
-          opacity: 0;
-        }
-      }
-
-      /* Toast types */
-      .toast-success {
-        border-left: 4px solid var(--success);
-        background: var(--accent-50);
-      }
-
-      .toast-error {
-        border-left: 4px solid var(--error);
-        background: #fef2f2;
-      }
-
-      .toast-warning {
-        border-left: 4px solid var(--warning);
-        background: #fffbeb;
-      }
-
-      .toast-info {
-        border-left: 4px solid var(--info);
-        background: var(--primary-50);
-      }
-
-      /* ========================================
-         Responsive Design
-         ======================================== */
-      @media (min-width: 768px) {
-        .grid-cols-md-2 {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .toast {
-          max-width: 400px;
-        }
-      }
-
-      /* Flip video only on desktop devices (not mobile) */
+      /* Flip video only on desktop devices */
       @media (hover: hover) and (pointer: fine) {
-        #video {
+        video {
           transform: scaleX(-1);
         }
       }
     </style>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"
-      defer
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"
-      defer
-    ></script>
   </head>
-
-  <body>
-    <!-- Header -->
-    <header class="header">
-      <div class="header-inner">
-        <div class="flex items-center gap-md">
-          <img src="./logo.png" alt="Reed Logo" class="logo" />
-          <div>
-            <h1 class="text-2xl font-bold">Reed</h1>
-            <p class="text-sm text-secondary">
-              air-gapped conduit for sensitive data.
-            </p>
-          </div>
-        </div>
-        <button
-          id="themeToggle"
-          class="theme-toggle-btn"
-          onclick="toggleTheme()"
-          title="Toggle theme"
-          aria-label="Toggle color theme"
+  <body class="min-h-screen bg-base-200 text-base-content font-sans">
+    <div x-data="indexPage" x-init="init()" @contextmenu.prevent>
+      <!-- Header -->
+      <header class="bg-base-100 border-b border-base-300 py-4 shadow-sm">
+        <div
+          class="container mx-auto px-4 flex justify-between items-center max-w-6xl"
         >
-          <span id="themeIcon">🌙</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container">
-      <div class="grid grid-cols-1 grid-cols-md-2 gap-xl">
-        <!-- Section A: Generate QR Code -->
-        <section class="card">
-          <h2 class="text-2xl font-semibold mb-lg">📤 Generate QR Code</h2>
-          <div class="flex flex-col gap-md">
-            <div class="qr-display" id="qrDisplay">
-              <p class="text-sm text-muted" id="qrPlaceholder">
-                Waiting generation...
+          <div class="flex items-center gap-4">
+            <img src="./logo.png" alt="Reed Logo" class="w-12 h-14" />
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">Reed</h1>
+              <p class="text-sm text-base-content/70">
+                air-gapped conduit for sensitive data.
               </p>
-              <div id="qrcode"></div>
             </div>
-            <button
-              id="toggleQrBtn"
-              class="btn btn-secondary-outline btn-sm hidden"
-              onclick="toggleQrVisibility()"
-            >
-              <span id="toggleQrBtnText">✓ 隐藏</span>
-            </button>
+          </div>
+          <button
+            class="btn btn-circle btn-ghost border-2 border-base-300"
+            @click="toggleTheme()"
+            :title="'Toggle theme'"
+          >
+            <iconify-icon
+              :icon="theme === 'dark' ? 'lucide:sun' : 'lucide:moon'"
+              class="text-xl"
+            ></iconify-icon>
+          </button>
+        </div>
+      </header>
 
-            <div class="input-wrapper">
-              <button
-                class="toggle-visibility-btn"
-                id="toggleInputBtn"
-                onclick="toggleInputVisibility()"
-                title="Show/Hide content"
-                aria-label="Toggle input visibility"
+      <!-- Main Content -->
+      <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Section A: Generate QR Code -->
+          <section class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body gap-4">
+              <h2 class="card-title text-2xl font-bold mb-2">
+                📤 Generate QR Code
+              </h2>
+
+              <div
+                class="qr-display-area relative flex flex-col justify-center items-center bg-base-200 rounded-lg border-2 border-dashed border-base-300 overflow-hidden"
               >
-                👁️
-              </button>
-              <textarea
-                id="textInput"
-                class="input textarea"
-                placeholder="text, password, privateKey, mnemonic, etc."
-                autocomplete="off"
-                spellcheck="false"
-                data-gramm="false"
-                data-gramm_editor="false"
-                data-enable-grammarly="false"
-              ></textarea>
-              <div class="text-sm text-muted mt-xs">
-                <span id="charCount">0</span> / 200 characters
+                <div x-show="!qrGenerated" class="text-sm text-base-content/50">
+                  Waiting generation...
+                </div>
+                <div
+                  id="qrcode"
+                  x-show="qrGenerated && showQr"
+                  class="p-2 bg-white rounded-lg"
+                ></div>
+                <div
+                  x-show="qrGenerated && !showQr"
+                  class="text-sm text-base-content/50 italic"
+                >
+                  QR Code Hidden
+                </div>
               </div>
-            </div>
 
-            <!-- Encryption Options -->
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-sm">
-                <span id="otpCode" class="text-sm font-semibold otp-display"
-                  >--</span
-                >
+              <button
+                x-show="qrGenerated"
+                class="btn btn-outline btn-sm w-full"
+                @click="showQr = !showQr"
+              >
+                <iconify-icon
+                  :icon="showQr ? 'lucide:eye-off' : 'lucide:eye'"
+                  class="mr-1"
+                ></iconify-icon>
+                <span x-text="showQr ? 'Hide QR' : 'Show QR'"></span>
+              </button>
+
+              <div class="relative">
                 <button
-                  id="toggleOtpBtn"
-                  class="otp-toggle-btn hidden"
-                  onclick="toggleOtpVisibility()"
-                  title="Show OTP"
+                  class="absolute top-2 right-2 z-10 btn btn-ghost btn-xs text-base-content/50 hover:text-primary"
+                  @click="showInput = !showInput"
                 >
-                  👁️
+                  <iconify-icon
+                    :icon="showInput ? 'lucide:eye-off' : 'lucide:eye'"
+                    class="text-lg"
+                  ></iconify-icon>
+                </button>
+                <textarea
+                  x-model="textInput"
+                  class="textarea textarea-bordered w-full h-32 pr-10 focus:textarea-primary transition-all duration-200"
+                  :class="{'blur-md select-none pointer-events-none': !showInput}"
+                  placeholder="text, password, privateKey, mnemonic, etc."
+                  autocomplete="off"
+                  spellcheck="false"
+                ></textarea>
+                <div
+                  class="text-xs text-base-content/50 mt-1 flex justify-between"
+                >
+                  <span
+                    ><span x-text="textInput.length"></span> / 200
+                    characters</span
+                  >
+                </div>
+              </div>
+
+              <!-- Encryption Options -->
+              <div
+                class="flex items-center justify-between bg-base-200 p-2 rounded-lg border border-base-300"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="font-mono text-sm font-semibold text-primary"
+                    x-text="otpDisplay"
+                  ></span>
+                  <button
+                    x-show="isEncryptEnabled"
+                    class="btn btn-ghost btn-xs text-base-content/50 hover:text-primary"
+                    @click="toggleOtpVisibility()"
+                  >
+                    <iconify-icon
+                      :icon="showOtp ? 'lucide:eye-off' : 'lucide:eye'"
+                    ></iconify-icon>
+                  </button>
+                </div>
+                <label
+                  class="flex items-center gap-2 cursor-pointer label py-0"
+                >
+                  <span class="label-text text-sm">🔐 Encrypt</span>
+                  <input
+                    type="checkbox"
+                    x-model="isEncryptEnabled"
+                    @change="handleEncryptionToggle()"
+                    class="checkbox checkbox-primary checkbox-sm"
+                  />
+                </label>
+              </div>
+
+              <div class="flex gap-2 justify-between mt-2">
+                <button class="btn btn-outline btn-sm" @click="resetPage()">
+                  <iconify-icon icon="lucide:trash-2"></iconify-icon> Reset
+                </button>
+                <button
+                  class="btn btn-primary btn-sm px-6"
+                  @click="generateQRCode()"
+                  :disabled="!textInput.trim() || isLoading"
+                >
+                  <span
+                    x-show="isLoading"
+                    class="loading loading-spinner loading-xs"
+                  ></span>
+                  <iconify-icon
+                    x-show="!isLoading"
+                    icon="lucide:qr-code"
+                  ></iconify-icon>
+                  Gen QR
                 </button>
               </div>
-              <label class="flex items-center gap-sm encrypt-label">
-                <input
-                  type="checkbox"
-                  id="encryptCheckbox"
-                  class="encrypt-checkbox"
-                  onchange="handleEncryptionToggle()"
-                />
-                <span class="text-sm">🔐 Encrypt</span>
-              </label>
             </div>
+          </section>
 
-            <div class="flex gap-sm flex-wrap justify-between">
-              <button
-                class="btn btn-neutral-outline btn-sm"
-                onclick="reloadPage()"
+          <!-- Section B: Scan QR Code -->
+          <section class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body gap-4">
+              <h2 class="card-title text-2xl font-bold mb-2">
+                📥 Scan QR Code
+              </h2>
+
+              <div
+                class="scanner-container-area relative flex justify-center items-center bg-base-200 rounded-lg border-2 border-dashed border-base-300 overflow-hidden bg-neutral"
               >
-                🗑️ Reset
-              </button>
-              <button
-                id="generateBtn"
-                class="btn btn-primary-solid btn-sm"
-                onclick="generateQRCode()"
-              >
-                🎯 Gen QR
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Section B: Scan QR Code -->
-        <section class="card">
-          <h2 class="text-2xl font-semibold mb-lg">📥 Scan QR Code</h2>
-
-          <div class="flex flex-col gap-md">
-            <div>
-              <div class="scanner-container">
-                <p class="text-sm text-muted" id="scanPlaceholder">
-                  Waiting scanning...
-                </p>
-                <video id="video" autoplay playsinline></video>
-                <canvas id="canvas"></canvas>
                 <div
-                  class="canvas-privacy-overlay hidden"
-                  id="canvasPrivacyOverlay"
+                  x-show="scanState === 'idle'"
+                  class="text-sm text-neutral-content/50"
+                >
+                  Waiting scanning...
+                </div>
+
+                <video
+                  x-ref="video"
+                  autoplay
+                  playsinline
+                  x-show="scanState === 'scanning'"
+                  class="w-full h-full object-contain"
+                ></video>
+                <canvas
+                  x-ref="canvas"
+                  x-show="scanState === 'result'"
+                  class="w-full h-full object-contain"
+                ></canvas>
+
+                <div
+                  x-show="scanState === 'result' && isPrivacyOverlayVisible"
+                  class="absolute inset-0 canvas-privacy-overlay z-10 pointer-events-none rounded-lg opacity-50"
                 ></div>
-                <div class="scanner-overlay hidden" id="scannerOverlay">
-                  <div class="scanner-corners">
-                    <div class="scanner-corner top-left"></div>
-                    <div class="scanner-corner top-right"></div>
-                    <div class="scanner-corner bottom-left"></div>
-                    <div class="scanner-corner bottom-right"></div>
+
+                <!-- Scanner Overlay -->
+                <div
+                  x-show="scanState === 'scanning'"
+                  class="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+                >
+                  <div
+                    class="w-64 h-64 border-2 border-primary rounded-lg relative"
+                  >
+                    <div
+                      class="absolute -top-1 -left-1 w-8 h-8 border-t-4 border-l-4 border-primary"
+                    ></div>
+                    <div
+                      class="absolute -top-1 -right-1 w-8 h-8 border-t-4 border-r-4 border-primary"
+                    ></div>
+                    <div
+                      class="absolute -bottom-1 -left-1 w-8 h-8 border-b-4 border-l-4 border-primary"
+                    ></div>
+                    <div
+                      class="absolute -bottom-1 -right-1 w-8 h-8 border-b-4 border-r-4 border-primary"
+                    ></div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Decryption Options -->
-            <div id="decryptionPanel" class="hidden flex flex-col gap-sm">
-              <div class="otp-inputs">
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp0"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp1"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp2"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp3"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-                <span class="otp-separator">-</span>
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp4"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp5"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp6"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-                <input
-                  type="text"
-                  maxlength="1"
-                  pattern="[0-9]"
-                  inputmode="numeric"
-                  id="otp7"
-                  class="otp-digit-input"
-                  autocomplete="off"
-                />
-              </div>
-              <div class="flex items-center justify-between">
-                <div class="text-sm font-semibold decrypt-header">
-                  🔓 Enter 8-digit OTP
+              <!-- Decryption Panel -->
+              <div
+                x-show="showDecryptionPanel"
+                x-cloak
+                class="flex flex-col gap-4 bg-base-200 p-4 rounded-lg border border-base-300"
+              >
+                <div class="flex justify-center gap-1">
+                  <template x-for="(digit, index) in 8" :key="index">
+                    <div class="flex items-center gap-1">
+                      <input
+                        type="text"
+                        maxlength="1"
+                        inputmode="numeric"
+                        class="w-8 h-12 text-center text-lg font-bold bg-base-100 border-2 border-base-300 rounded focus:border-primary outline-none transition-all"
+                        x-model="otpInputs[index]"
+                        @input="handleOtpInput($event, index)"
+                        @keydown="handleOtpKeydown($event, index)"
+                        @paste="handleOtpPaste($event)"
+                        :id="'otp-' + index"
+                      />
+                      <span
+                        x-show="index === 3"
+                        class="font-bold text-base-content/30 mx-0.5"
+                        >-</span
+                      >
+                    </div>
+                  </template>
                 </div>
+                <div class="flex items-center justify-between">
+                  <div
+                    class="text-sm font-semibold text-primary flex items-center gap-1"
+                  >
+                    <iconify-icon icon="lucide:unlock"></iconify-icon> Enter
+                    8-digit OTP
+                  </div>
+                  <button
+                    class="btn btn-accent btn-sm"
+                    @click="decryptResult()"
+                    :disabled="isDecrypting"
+                  >
+                    <span
+                      x-show="isDecrypting"
+                      class="loading loading-spinner loading-xs"
+                    ></span>
+                    Unlock
+                  </button>
+                </div>
+              </div>
+
+              <!-- Result Box -->
+              <div class="relative group">
                 <button
-                  class="btn btn-accent-solid btn-sm"
-                  onclick="decryptResult()"
+                  x-show="scanState === 'result' && scanResult"
+                  class="absolute top-2 right-2 z-10 btn btn-ghost btn-xs text-base-content/50 hover:text-primary"
+                  @click="showResult = !showResult"
                 >
-                  🔓 Decrypt
+                  <iconify-icon
+                    :icon="showResult ? 'lucide:eye-off' : 'lucide:eye'"
+                    class="text-lg"
+                  ></iconify-icon>
                 </button>
+                <div
+                  class="bg-base-200 p-4 rounded-lg border-2 border-accent/20 min-h-[100px] break-all relative"
+                >
+                  <p
+                    x-show="!scanResult"
+                    class="text-sm text-base-content/50 italic"
+                  >
+                    Waiting result...
+                  </p>
+                  <p
+                    x-show="scanResult"
+                    x-text="scanResult"
+                    class="text-base-content transition-all duration-200"
+                    :class="{'blur-md select-none pointer-events-none': !showResult}"
+                  ></p>
+                </div>
+              </div>
+
+              <div class="flex gap-2 mt-2 justify-between flex-wrap">
+                <!-- Waiting State -->
+                <template x-if="scanState === 'idle'">
+                  <div class="flex gap-2 w-full justify-between">
+                    <button class="btn btn-outline btn-sm" @click="resetPage()">
+                      <iconify-icon icon="lucide:trash-2"></iconify-icon> Reset
+                    </button>
+                    <div class="flex gap-2">
+                      <button
+                        class="btn btn-ghost btn-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary hover:text-white"
+                        @click="$refs.imageInput.click()"
+                      >
+                        <iconify-icon icon="lucide:image"></iconify-icon> Upload
+                      </button>
+                      <button
+                        class="btn btn-primary btn-sm"
+                        @click="startScanning()"
+                      >
+                        <iconify-icon icon="lucide:camera"></iconify-icon> Scan
+                        QR
+                      </button>
+                    </div>
+                  </div>
+                </template>
+                <input
+                  type="file"
+                  x-ref="imageInput"
+                  accept="image/*"
+                  class="hidden"
+                  @change="handleImageUpload($event)"
+                />
+
+                <!-- Scanning State -->
+                <template x-if="scanState === 'scanning'">
+                  <div class="flex gap-2 w-full justify-between">
+                    <button
+                      class="btn btn-outline btn-sm"
+                      @click="stopScanning()"
+                    >
+                      <iconify-icon icon="lucide:x"></iconify-icon> Cancel
+                    </button>
+                    <button
+                      class="btn btn-accent btn-sm px-6"
+                      @click="captureAndDecode()"
+                    >
+                      <iconify-icon icon="lucide:check"></iconify-icon> Confirm
+                    </button>
+                  </div>
+                </template>
+
+                <!-- Result State -->
+                <template x-if="scanState === 'result'">
+                  <div class="flex gap-2 w-full justify-between">
+                    <button class="btn btn-outline btn-sm" @click="resetPage()">
+                      <iconify-icon icon="lucide:trash-2"></iconify-icon> Reset
+                    </button>
+                    <button
+                      class="btn btn-ghost btn-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary hover:text-white"
+                      @click="copyResult()"
+                    >
+                      <iconify-icon icon="lucide:copy"></iconify-icon> Copy
+                    </button>
+                  </div>
+                </template>
               </div>
             </div>
+          </section>
+        </div>
+      </main>
 
-            <div class="result-wrapper">
-              <button
-                class="toggle-visibility-btn hidden"
-                id="toggleResultBtn"
-                onclick="toggleResultVisibility()"
-                title="Show/Hide content"
-                aria-label="Toggle result visibility"
-              >
-                👁️
-              </button>
-              <div class="result-box">
-                <p class="text-sm text-muted" id="resultPlaceholder">
-                  Waiting result...
+      <!-- FAQ Section -->
+      <section class="bg-base-100 border-t border-base-300 py-16 mt-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+          <h2 class="text-3xl font-bold mb-10 text-center">
+            ❓ FAQ - 常见问题
+          </h2>
+
+          <div class="join join-vertical w-full">
+            <div
+              class="collapse collapse-arrow join-item border border-base-300"
+            >
+              <input type="radio" name="faq-accordion" checked="checked" />
+              <div class="collapse-title text-lg font-semibold">
+                Q: 这个工具安全吗？
+              </div>
+              <div class="collapse-content">
+                <p class="mb-2">
+                  Reed
+                  是一个完全离线运行的工具，不会将您的数据发送到任何服务器。所有操作都在您的浏览器本地完成。为了进一步提升安全性，建议：
                 </p>
-                <p id="scanResult" class="text-muted m-0 hidden"></p>
+                <ul class="list-disc pl-5 gap-1 flex flex-col">
+                  <li>使用浏览器的无痕/隐私模式</li>
+                  <li>在离线环境中使用</li>
+                  <li>采用分段传输的方式处理敏感信息</li>
+                  <li>避免使用剪贴板复制粘贴</li>
+                </ul>
               </div>
             </div>
 
-            <div class="flex gap-sm mt-md justify-between flex-wrap">
-              <!-- Waiting State: Scan + Upload + Reset -->
-              <button
-                id="waitingResetBtn"
-                class="btn btn-neutral-outline btn-sm"
-                onclick="reloadPage()"
-              >
-                🗑️ Reset
-              </button>
-              <input
-                type="file"
-                id="imageInput"
-                accept="image/*"
-                style="display: none"
-                onchange="handleImageUpload(event)"
-              />
-              <button
-                id="uploadBtn"
-                class="btn btn-primary-soft btn-sm"
-                onclick="document.getElementById('imageInput').click()"
-              >
-                🖼️ Upload
-              </button>
-              <button
-                id="scanBtn"
-                class="btn btn-primary-solid btn-sm"
-                onclick="startScanning()"
-              >
-                📷 Scan QR
-              </button>
-              <!-- Scanning State: Cancel + Confirm -->
-              <button
-                id="cancelBtn"
-                class="btn btn-neutral-outline btn-sm hidden"
-                onclick="stopScanning()"
-              >
-                ❌ Cancel
-              </button>
-              <button
-                id="confirmBtn"
-                class="btn btn-accent-solid btn-sm hidden"
-                onclick="captureAndDecode()"
-              >
-                ✅ Confirm
-              </button>
-
-              <!-- Result State: Reset + Copy -->
-              <button
-                id="resultResetBtn"
-                class="btn btn-neutral-outline btn-sm hidden"
-                onclick="reloadPage()"
-              >
-                🗑️ Reset
-              </button>
-              <button
-                id="resultCopyBtn"
-                class="btn btn-primary-soft btn-sm hidden"
-                onclick="copyResult()"
-              >
-                📋 Copy
-              </button>
+            <div
+              class="collapse collapse-arrow join-item border border-base-300"
+            >
+              <input type="radio" name="faq-accordion" />
+              <div class="collapse-title text-lg font-semibold">
+                Q: 为什么要避免使用剪贴板？
+              </div>
+              <div class="collapse-content">
+                <p>
+                  许多软件可能会监听或同步剪贴板内容，包括输入法（特别是云输入法）、翻译工具、剪贴板增强工具等。虽然这些软件通常无法读取屏幕或摄像头内容，但可以在您复制文本时获取完整内容。因此，避免让敏感信息进入剪贴板是一个有效的风险降低措施。
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
-      </div>
-    </main>
 
-    <!-- FAQ Section -->
-    <section class="faq-section">
-      <div class="container">
-        <h2 class="text-2xl font-bold mb-lg">❓ FAQ - 常见问题</h2>
+            <div
+              class="collapse collapse-arrow join-item border border-base-300"
+            >
+              <input type="radio" name="faq-accordion" />
+              <div class="collapse-title text-lg font-semibold">
+                Q: 什么是分段传输？为什么推荐使用？
+              </div>
+              <div class="collapse-content">
+                <p class="mb-2">
+                  分段传输是指将长的私钥或助记词拆分成多个较短的片段（建议 3-5
+                  段），分别生成二维码并传输。这种方式的优势是：
+                </p>
+                <ul class="list-disc pl-5 gap-1 flex flex-col">
+                  <li>降低单次泄露的风险</li>
+                  <li>二维码更清晰，扫描成功率更高</li>
+                  <li>可以灵活选择某些片段手动输入，而不通过二维码</li>
+                  <li>即使部分片段被截获，也无法获得完整信息</li>
+                </ul>
+              </div>
+            </div>
 
-        <div class="faq-item">
-          <h3 class="faq-question">Q: 这个工具安全吗？</h3>
-          <div class="faq-answer">
-            <p>
-              Reed
-              是一个完全离线运行的工具，不会将您的数据发送到任何服务器。所有操作都在您的浏览器本地完成。为了进一步提升安全性，建议：
-            </p>
-            <ul>
-              <li>使用浏览器的无痕/隐私模式</li>
-              <li>在离线环境中使用</li>
-              <li>采用分段传输的方式处理敏感信息</li>
-              <li>避免使用剪贴板复制粘贴</li>
-            </ul>
-          </div>
-        </div>
+            <div
+              class="collapse collapse-arrow join-item border border-base-300"
+            >
+              <input type="radio" name="faq-accordion" />
+              <div class="collapse-title text-lg font-semibold">
+                Q: 如何使用无痕模式？
+              </div>
+              <div class="collapse-content">
+                <p class="mb-2">在主流浏览器中打开无痕/隐私模式的快捷键：</p>
+                <ul class="list-disc pl-5 gap-1 flex flex-col">
+                  <li>
+                    <strong>Chrome / Edge</strong>: Ctrl + Shift + N (Win/Linux)
+                    或 Cmd + Shift + N (Mac)
+                  </li>
+                  <li>
+                    <strong>Firefox</strong>: Ctrl + Shift + P (Win/Linux) 或
+                    Cmd + Shift + P (Mac)
+                  </li>
+                  <li><strong>Safari</strong>: Cmd + Shift + N (Mac)</li>
+                </ul>
+                <p class="mt-2 text-sm italic opacity-70">
+                  无痕模式可以防止浏览器扩展访问页面内容，并在会话结束后自动清理所有数据。
+                </p>
+              </div>
+            </div>
 
-        <div class="faq-item">
-          <h3 class="faq-question">Q: 为什么要避免使用剪贴板？</h3>
-          <div class="faq-answer">
-            <p>
-              许多软件可能会监听或同步剪贴板内容，包括输入法（特别是云输入法）、翻译工具、剪贴板增强工具等。虽然这些软件通常无法读取屏幕或摄像头内容，但可以在您复制文本时获取完整内容。因此，避免让敏感信息进入剪贴板是一个有效的风险降低措施。
-            </p>
-          </div>
-        </div>
+            <div
+              class="collapse collapse-arrow join-item border border-base-300"
+            >
+              <input type="radio" name="faq-accordion" />
+              <div class="collapse-title text-lg font-semibold">
+                Q: 为什么限制 200 字符？
+              </div>
+              <div class="collapse-content">
+                <p class="mb-2">
+                  200
+                  字符的限制是为了确保二维码的扫描质量。较长的内容会导致二维码变得密集，在
+                  300x300 像素的显示尺寸下难以扫描。200
+                  字符足以满足大多数使用场景，包括：
+                </p>
+                <ul class="list-disc pl-5 gap-1 flex flex-col">
+                  <li>密码：通常 8-64 字符</li>
+                  <li>比特币私钥：52-64 字符</li>
+                  <li>助记词（12 词）：约 150 字符</li>
+                  <li>API Token：通常 32-256 字符</li>
+                </ul>
+                <p class="mt-2 text-sm italic opacity-70">
+                  对于更长的内容（如 24 词助记词），建议使用分段传输的方式。
+                </p>
+              </div>
+            </div>
 
-        <div class="faq-item">
-          <h3 class="faq-question">Q: 什么是分段传输？为什么推荐使用？</h3>
-          <div class="faq-answer">
-            <p>
-              分段传输是指将长的私钥或助记词拆分成多个较短的片段（建议 3-5
-              段），分别生成二维码并传输。这种方式的优势是：
-            </p>
-            <ul>
-              <li>降低单次泄露的风险</li>
-              <li>二维码更清晰，扫描成功率更高</li>
-              <li>可以灵活选择某些片段手动输入，而不通过二维码</li>
-              <li>即使部分片段被截获，也无法获得完整信息</li>
-            </ul>
-          </div>
-        </div>
+            <div
+              class="collapse collapse-arrow join-item border border-base-300"
+            >
+              <input type="radio" name="faq-accordion" />
+              <div class="collapse-title text-lg font-semibold">
+                Q: 遇到问题或有建议如何反馈？
+              </div>
+              <div class="collapse-content">
+                <p>欢迎通过以下方式联系：</p>
+                <div class="flex gap-6 mt-4 justify-center">
+                  <a
+                    href="https://github.com/Pony-Unicorn/reed/issues"
+                    target="_blank"
+                    class="btn btn-outline btn-sm gap-2"
+                  >
+                    <iconify-icon icon="lucide:github"></iconify-icon> GitHub
+                    Issues
+                  </a>
+                  <a
+                    href="https://x.com/shunfengge"
+                    target="_blank"
+                    class="btn btn-outline btn-sm gap-2"
+                  >
+                    <iconify-icon icon="lucide:twitter"></iconify-icon>
+                    Twitter/X
+                  </a>
+                </div>
+              </div>
+            </div>
 
-        <div class="faq-item">
-          <h3 class="faq-question">Q: 如何使用无痕模式？</h3>
-          <div class="faq-answer">
-            <p>在主流浏览器中打开无痕/隐私模式的快捷键：</p>
-            <ul>
-              <li>
-                <strong>Chrome / Edge</strong>: Ctrl + Shift + N (Windows/Linux)
-                或 Cmd + Shift + N (Mac)
-              </li>
-              <li>
-                <strong>Firefox</strong>: Ctrl + Shift + P (Windows/Linux) 或
-                Cmd + Shift + P (Mac)
-              </li>
-              <li><strong>Safari</strong>: Cmd + Shift + N (Mac)</li>
-            </ul>
-            <p>
-              无痕模式可以防止浏览器扩展访问页面内容，并在会话结束后自动清理所有数据。
-            </p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <h3 class="faq-question">Q: 为什么限制 200 字符？</h3>
-          <div class="faq-answer">
-            <p>
-              200
-              字符的限制是为了确保二维码的扫描质量。较长的内容会导致二维码变得密集，在
-              256x256 像素的显示尺寸下难以扫描。200
-              字符足以满足大多数使用场景，包括：
-            </p>
-            <ul>
-              <li>密码：通常 8-64 字符</li>
-              <li>比特币私钥：52-64 字符</li>
-              <li>助记词（12 词）：约 150 字符</li>
-              <li>API Token：通常 32-256 字符</li>
-            </ul>
-            <p>对于更长的内容（如 24 词助记词），建议使用分段传输的方式。</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <h3 class="faq-question">Q: 遇到问题或有建议如何反馈？</h3>
-          <div class="faq-answer">
-            <p>欢迎通过以下方式联系：</p>
-            <div class="faq-contact">
-              <a
-                href="https://github.com/Pony-Unicorn/reed/issues"
-                target="_blank"
-                rel="noopener noreferrer"
-                >💬 GitHub Issues</a
-              >
-              <a
-                href="https://x.com/shunfengge"
-                target="_blank"
-                rel="noopener noreferrer"
-                >🐦 Twitter/X @shunfengge</a
-              >
+            <div
+              class="collapse collapse-arrow join-item border border-base-300"
+            >
+              <input type="radio" name="faq-accordion" />
+              <div class="collapse-title text-lg font-semibold text-error">
+                ⚠️ 免责声明
+              </div>
+              <div class="collapse-content text-error">
+                <p>
+                  请确保在安全、可信的环境中使用本工具。任何私钥一旦泄露，均可能导致资产永久损失。本工具仅提供技术方案，使用者需自行承担安全责任。
+                </p>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <div class="faq-item">
-          <h3 class="faq-question">⚠️ 免责声明</h3>
-          <div class="faq-answer">
-            <p>
-              请确保在安全、可信的环境中使用本工具。任何私钥一旦泄露，均可能导致资产永久损失。本工具仅提供技术方案，使用者需自行承担安全责任。
-            </p>
+      <!-- Toast (Handled by shared.js store) -->
+      <div class="toast toast-top toast-center z-50">
+        <template x-for="t in $store.toast.items" :key="t.id">
+          <div x-transition class="alert shadow-lg" :class="'alert-' + t.type">
+            <span x-text="t.message"></span>
           </div>
-        </div>
+        </template>
       </div>
-    </section>
+    </div>
 
     <script>
       // ========================================
-      // Utility
+      // Global Config & Utils (Formerly shared.js)
       // ========================================
-      const $ = (id) => document.getElementById(id);
+      const CONFIG = {
+        PBKDF2_ITERS: 120_000,
+        SALT_BYTES: 16,
+        IV_BYTES: 12,
+        MAX_CHAR_COUNT: 200,
+      };
 
-      // ========================================
-      // Global State
-      // ========================================
-      let videoStream = null;
-      let currentOtp = null;
-      let encryptedContent = null; // Store encrypted scan result
-
-      // ========================================
-      // Encryption Toggle Handler
-      // ========================================
-      // ========================================
-      // OTP Visibility Toggle
-      // ========================================
-      let otpAutoHideTimer = null;
-      let otpActualValue = null;
-
-      function toggleOtpVisibility() {
-        const otpCode = $("otpCode");
-        const toggleBtn = $("toggleOtpBtn");
-
-        if (otpCode.textContent === "••••-••••") {
-          // Show actual OTP
-          otpCode.textContent = otpActualValue;
-          toggleBtn.textContent = "👁️‍🗨️";
-          toggleBtn.title = "Hide OTP";
-
-          // Auto-hide after 5 seconds
-          if (otpAutoHideTimer) clearTimeout(otpAutoHideTimer);
-          otpAutoHideTimer = setTimeout(() => {
-            hideOtp();
-          }, 5000);
-        } else {
-          // Hide OTP
-          hideOtp();
-        }
-      }
-
-      function hideOtp() {
-        const otpCode = $("otpCode");
-        const toggleBtn = $("toggleOtpBtn");
-
-        if (otpActualValue) {
-          otpCode.textContent = "••••-••••";
-          toggleBtn.textContent = "👁️";
-          toggleBtn.title = "Show OTP";
-        }
-
-        if (otpAutoHideTimer) {
-          clearTimeout(otpAutoHideTimer);
-          otpAutoHideTimer = null;
-        }
-      }
-
-      function handleEncryptionToggle() {
-        const checkbox = $("encryptCheckbox");
-        const otpCode = $("otpCode");
-        const toggleBtn = $("toggleOtpBtn");
-
-        if (checkbox.checked) {
-          // Generate new OTP
-          currentOtp = generateOtp();
-          otpActualValue = otpToString(currentOtp);
-
-          // Show hidden by default
-          otpCode.textContent = "••••-••••";
-          toggleBtn.classList.remove("hidden");
-        } else {
-          // Clear OTP and hide button
-          currentOtp = null;
-          otpActualValue = null;
-          otpCode.textContent = "--";
-          toggleBtn.classList.add("hidden");
-
-          // Clear auto-hide timer
-          if (otpAutoHideTimer) {
-            clearTimeout(otpAutoHideTimer);
-            otpAutoHideTimer = null;
-          }
-        }
-      }
-
-      // ========================================
-      // QR Code Visibility Toggle
-      // ========================================
-      function toggleQrVisibility() {
-        const qrcode = $("qrcode");
-        const toggleBtn = $("toggleQrBtn");
-        const toggleBtnText = $("toggleQrBtnText");
-
-        if (qrcode.style.display === "none") {
-          // Show QR code
-          qrcode.style.display = "";
-          toggleBtnText.textContent = "✓ 隐藏";
-        } else {
-          // Hide QR code
-          qrcode.style.display = "none";
-          toggleBtnText.textContent = "👁️ 显示";
-        }
-      }
-
-      // ========================================
-      // Section A: Generate QR Code
-      // ========================================
-      async function generateQRCode() {
-        const text = $("textInput").value.trim();
-        const qrContainer = $("qrcode");
-        const placeholder = $("qrPlaceholder");
-        const encryptCheckbox = $("encryptCheckbox");
-
-        if (!text) {
-          showToast("Enter content", "warning");
-          return;
-        }
-
-        // Character limit check (before encryption)
-        const MAX_LENGTH = 200;
-        if (text.length > MAX_LENGTH) {
-          showToast(`Too long (${text.length}/${MAX_LENGTH})`, "error", 4000);
-          return;
-        }
-
-        // Clear previous QR code
-        qrContainer.innerHTML = "";
-
-        try {
-          // Determine the content to encode
-          let contentToEncode = text;
-
-          // Check if encryption is enabled
-          if (encryptCheckbox.checked && currentOtp) {
-            // Encrypt the text
-            contentToEncode = await encryptOnce(text, currentOtp);
-          }
-
-          // Generate QR code with optimized settings for better scanning
-          QRCode.toCanvas(
-            contentToEncode,
-            {
-              width: 300,
-              margin: 4, // Increased margin for better edge detection
-              color: {
-                dark: "#000000", // Pure black for maximum contrast
-                light: "#ffffff", // Pure white
-              },
-              errorCorrectionLevel: "M", // Medium error correction (15%) - better balance for scanning
-            },
-            function (error, canvas) {
-              if (error) {
-                console.error(error);
-                showToast("Generation failed", "error");
-                return;
-              }
-              qrContainer.appendChild(canvas);
-              placeholder.classList.add("hidden");
-
-              // Show QR code and hide button
-              qrContainer.style.display = "";
-              $("toggleQrBtn").classList.remove("hidden");
-              $("toggleQrBtnText").textContent = "✓ 隐藏";
-
-              // Hide input content for security
-              hideInputContent();
-            },
-          );
-        } catch (error) {
-          console.error("Encryption error:", error);
-          showToast("Encryption failed", "error");
-        }
-      }
-
-      // ========================================
-      // Image Upload and QR Code Recognition
-      // ========================================
-      function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        // Validate file type
-        if (!file.type.startsWith("image/")) {
-          showToast("Please select an image file", "error");
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const img = new Image();
-          img.onload = function () {
-            decodeQRFromImage(img);
-          };
-          img.onerror = function () {
-            showToast("Failed to load image", "error");
-          };
-          img.src = e.target.result;
-        };
-        reader.onerror = function () {
-          showToast("Failed to read file", "error");
-        };
-        reader.readAsDataURL(file);
-
-        // Clear input for re-uploading same file
-        event.target.value = "";
-      }
-
-      function decodeQRFromImage(img) {
-        const canvas = $("canvas");
-        const scanResult = $("scanResult");
-        const resultPlaceholder = $("resultPlaceholder");
-        const placeholder = $("scanPlaceholder");
-        const video = $("video");
-        const overlay = $("scannerOverlay");
-
-        // Set canvas size to match image
-        canvas.width = img.width;
-        canvas.height = img.height;
-
-        // Draw image to canvas with enhanced contrast
-        const context = canvas.getContext("2d", { willReadFrequently: true });
-        context.filter = "contrast(120%) brightness(105%)";
-        context.drawImage(img, 0, 0, canvas.width, canvas.height);
-        context.filter = "none";
-
-        // Get image data
-        const imageData = context.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height,
-        );
-
-        // Decode QR code using jsQR
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: "attemptBoth",
-        });
-
-        if (code) {
-          // Success - show canvas and result
-          placeholder.classList.add("hidden");
-          video.classList.remove("active");
-          canvas.classList.add("active");
-          overlay.classList.add("hidden");
-
-          // Show privacy overlay
-          $("canvasPrivacyOverlay").classList.remove("hidden");
-
-          // Check if content is encrypted
-          const isEncrypted = code.data.startsWith("reed:v1.");
-
-          if (isEncrypted) {
-            encryptedContent = code.data;
-            $("decryptionPanel").classList.remove("hidden");
-            resultPlaceholder.textContent = "Enter OTP to decrypt...";
-          } else {
-            resultPlaceholder.classList.add("hidden");
-            scanResult.classList.remove("hidden");
-            scanResult.classList.add("content-hidden");
-            scanResult.textContent = code.data;
-
-            $("toggleResultBtn").classList.remove("hidden");
-            $("toggleResultBtn").textContent = "👁️‍🗨️";
-            $("toggleResultBtn").title = "Show content";
-          }
-
-          showResultButtons();
-          showToast("QR code recognized!", "success", 2000);
-        } else {
-          showToast("No QR code found in image", "warning", 3000);
-        }
-      }
-
-      async function startScanning() {
-        const video = $("video");
-        const placeholder = $("scanPlaceholder");
-        const overlay = $("scannerOverlay");
-
-        try {
-          videoStream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              facingMode: "environment",
-              width: { min: 640, ideal: 1280, max: 2560 }, // Balanced resolution for near and far distance
-              height: { min: 640, ideal: 1280, max: 2560 },
-            },
-            audio: false,
-          });
-
-          video.srcObject = videoStream;
-
-          // Hide placeholder, show video and overlay
-          placeholder.classList.add("hidden");
-          video.classList.add("active");
-          overlay.classList.remove("hidden");
-
-          // Show scanning buttons
-          showScanningButtons();
-        } catch (error) {
-          console.error("Camera access error:", error);
-          showToast("Camera access denied", "error", 4000);
-        }
-      }
-
-      function captureAndDecode() {
-        const video = $("video");
-        const canvas = $("canvas");
-        const scanResult = $("scanResult");
-        const resultPlaceholder = $("resultPlaceholder");
-        const overlay = $("scannerOverlay");
-
-        // Set canvas size to match video
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-
-        // Draw video frame to canvas with enhanced contrast for better scanning
-        // willReadFrequently: true - optimize for multiple getImageData() calls
-        const context = canvas.getContext("2d", { willReadFrequently: true });
-
-        // Apply image enhancement filters before drawing
-        context.filter = "contrast(120%) brightness(105%)";
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        context.filter = "none"; // Reset filter
-
-        // Get image data
-        const imageData = context.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height,
-        );
-
-        // Decode QR code using jsQR with optimized settings
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: "attemptBoth", // Try both normal and inverted for better recognition in various lighting
-        });
-
-        if (code) {
-          // Success - show canvas, stop camera and show result
-          canvas.classList.add("active");
-          video.classList.remove("active");
-          overlay.classList.add("hidden");
-
-          // Show privacy overlay to prevent shoulder surfing
-          $("canvasPrivacyOverlay").classList.remove("hidden");
-
-          // Stop video stream
-          if (videoStream) {
-            videoStream.getTracks().forEach((track) => track.stop());
-            videoStream = null;
-          }
-          video.srcObject = null;
-
-          // Check if content is encrypted (starts with "reed:v1.")
-          const isEncrypted = code.data.startsWith("reed:v1.");
-
-          if (isEncrypted) {
-            // Store encrypted content and show decryption panel
-            encryptedContent = code.data;
-            $("decryptionPanel").classList.remove("hidden");
-            resultPlaceholder.textContent = "Enter OTP to decrypt...";
-          } else {
-            // Show plain text result (blurred by default for privacy)
-            resultPlaceholder.classList.add("hidden");
-            scanResult.classList.remove("hidden");
-            scanResult.classList.add("content-hidden");
-            scanResult.textContent = code.data;
-
-            // Show toggle visibility button for result
-            $("toggleResultBtn").classList.remove("hidden");
-            $("toggleResultBtn").textContent = "👁️‍🗨️";
-            $("toggleResultBtn").title = "Show content";
-          }
-
-          showResultButtons();
-        } else {
-          // Failed - keep camera open, let user adjust and retry
-          showToast("Not detected, adjust angle", "warning", 3000);
-          // Camera remains open, user can click Confirm again to retry
-        }
-      }
-
-      async function decryptResult() {
-        const scanResult = $("scanResult");
-        const resultPlaceholder = $("resultPlaceholder");
-        const decryptionPanel = $("decryptionPanel");
-
-        if (!encryptedContent) {
-          showToast("No encrypted content", "error");
-          return;
-        }
-
-        try {
-          // Collect OTP from 8 input boxes
-          const otpNums = [];
-          for (let i = 0; i < 8; i++) {
-            const input = $(`otp${i}`);
-            const value = input.value.trim();
-
-            if (!value) {
-              showToast(`Enter all 8 digits`, "warning");
-              input.focus();
-              return;
-            }
-
-            const num = parseInt(value, 10);
-            if (isNaN(num) || num < 0 || num > 9) {
-              showToast("Invalid digit", "error");
-              input.focus();
-              return;
-            }
-
-            otpNums.push(num);
-          }
-
-          // Decrypt the content
-          const decryptedText = await decryptOnce(encryptedContent, otpNums);
-
-          // Show decrypted result (blurred by default for privacy)
-          resultPlaceholder.classList.add("hidden");
-          scanResult.classList.remove("hidden");
-          scanResult.classList.add("content-hidden");
-          scanResult.textContent = decryptedText;
-
-          // Hide decryption panel
-          decryptionPanel.classList.add("hidden");
-
-          // Show toggle visibility button
-          $("toggleResultBtn").classList.remove("hidden");
-          $("toggleResultBtn").textContent = "👁️‍🗨️";
-          $("toggleResultBtn").title = "Show content";
-
-          // Clear all OTP inputs for security
-          for (let i = 0; i < 8; i++) {
-            $(`otp${i}`).value = "";
-          }
-
-          showToast("Decrypted!", "success", 2000);
-        } catch (error) {
-          console.error("Decryption error:", error);
-          showToast("Decryption failed. Check OTP", "error", 4000);
-        }
-      }
-
-      function resetScannerState() {
-        const video = $("video");
-        const placeholder = $("scanPlaceholder");
-        const overlay = $("scannerOverlay");
-        const canvas = $("canvas");
-
-        // Stop video stream
-        if (videoStream) {
-          videoStream.getTracks().forEach((track) => track.stop());
-          videoStream = null;
-        }
-
-        // Reset video and canvas
-        video.srcObject = null;
-        video.classList.remove("active");
-        canvas.classList.remove("active");
-        overlay.classList.add("hidden");
-
-        // Hide privacy overlay
-        $("canvasPrivacyOverlay").classList.add("hidden");
-
-        // Show placeholder
-        placeholder.classList.remove("hidden");
-
-        // Show waiting buttons (Scan + Reset)
-        showWaitingButtons();
-      }
-
-      function stopScanning() {
-        const video = $("video");
-        const placeholder = $("scanPlaceholder");
-        const overlay = $("scannerOverlay");
-        const canvas = $("canvas");
-
-        // Stop video stream
-        if (videoStream) {
-          videoStream.getTracks().forEach((track) => track.stop());
-          videoStream = null;
-        }
-
-        video.srcObject = null;
-
-        // Show placeholder, hide video, overlay and canvas
-        placeholder.classList.remove("hidden");
-        video.classList.remove("active");
-        canvas.classList.remove("active");
-        overlay.classList.add("hidden");
-
-        // Hide privacy overlay
-        $("canvasPrivacyOverlay").classList.add("hidden");
-
-        // Show waiting buttons
-        showWaitingButtons();
-      }
-
-      function copyResult() {
-        const scanResult = $("scanResult");
-        const text = scanResult.textContent;
-
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            showToast("Copied!", "success", 2000);
-          })
-          .catch((error) => {
-            console.error("Copy failed:", error);
-            // Fallback for older browsers
-            const textarea = document.createElement("textarea");
-            textarea.value = text;
-            textarea.style.position = "fixed";
-            textarea.style.opacity = "0";
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-            showToast("Copied!", "success", 2000);
-          });
-      }
-
-      // ========================================
-      // Section B: Scan QR Code
-      // ========================================
-      // Button state management
-      function showWaitingButtons() {
-        $("scanBtn").classList.remove("hidden");
-        $("uploadBtn").classList.remove("hidden");
-        $("waitingResetBtn").classList.remove("hidden");
-        $("cancelBtn").classList.add("hidden");
-        $("confirmBtn").classList.add("hidden");
-        $("resultResetBtn").classList.add("hidden");
-        $("resultCopyBtn").classList.add("hidden");
-      }
-
-      function showScanningButtons() {
-        $("scanBtn").classList.add("hidden");
-        $("uploadBtn").classList.add("hidden");
-        $("waitingResetBtn").classList.add("hidden");
-        $("cancelBtn").classList.remove("hidden");
-        $("confirmBtn").classList.remove("hidden");
-        $("resultResetBtn").classList.add("hidden");
-        $("resultCopyBtn").classList.add("hidden");
-      }
-
-      function showResultButtons() {
-        $("scanBtn").classList.add("hidden");
-        $("uploadBtn").classList.add("hidden");
-        $("waitingResetBtn").classList.add("hidden");
-        $("cancelBtn").classList.add("hidden");
-        $("confirmBtn").classList.add("hidden");
-        $("resultResetBtn").classList.remove("hidden");
-        $("resultCopyBtn").classList.remove("hidden");
-      }
-
-      function reloadPage() {
-        window.location.reload();
-      }
-
-      // ========================================
-      // Toast Notification Function
-      // ========================================
-      function showToast(message, type = "info", duration = 3000) {
-        const toast = $("toast");
-
-        // Clear existing timer if any
-        if (window.toastTimer) {
-          clearTimeout(window.toastTimer);
-        }
-
-        // Set message and type
-        toast.textContent = message;
-        toast.className = `toast toast-${type} text-muted`;
-
-        // Show toast with animation
-        setTimeout(() => {
-          toast.classList.add("toast-hide");
-          window.toastTimer = setTimeout(() => {
-            toast.classList.add("hidden");
-            toast.classList.remove("toast-hide");
-          }, 300);
-        }, duration);
-      }
-
-      // ========================================
-      // Visibility Toggle Functions
-      // ========================================
-      function hideInputContent() {
-        const textInput = $("textInput");
-        const toggleBtn = $("toggleInputBtn");
-
-        if (!textInput.classList.contains("content-hidden")) {
-          textInput.classList.add("content-hidden");
-          toggleBtn.textContent = "👁️‍🗨️";
-          toggleBtn.title = "Show content";
-        }
-      }
-
-      function showInputContent() {
-        const textInput = $("textInput");
-        const toggleBtn = $("toggleInputBtn");
-
-        if (textInput.classList.contains("content-hidden")) {
-          textInput.classList.remove("content-hidden");
-          toggleBtn.textContent = "👁️";
-          toggleBtn.title = "Hide content";
-        }
-      }
-
-      function toggleInputVisibility() {
-        const textInput = $("textInput");
-        if (textInput.classList.contains("content-hidden")) {
-          showInputContent();
-        } else {
-          hideInputContent();
-        }
-      }
-
-      function toggleResultVisibility() {
-        const scanResult = $("scanResult");
-        const toggleBtn = $("toggleResultBtn");
-
-        if (scanResult.classList.contains("content-hidden")) {
-          // Show content
-          scanResult.classList.remove("content-hidden");
-          toggleBtn.textContent = "👁️";
-          toggleBtn.title = "Hide content";
-        } else {
-          // Hide content
-          scanResult.classList.add("content-hidden");
-          toggleBtn.textContent = "👁️‍🗨️";
-          toggleBtn.title = "Show content";
-        }
-      }
-
-      // ========================================
-      // Crypto: Parameter Configuration
-      // ========================================
-      const PBKDF2_ITERS = 120_000;
-      const SALT_BYTES = 16;
-      const IV_BYTES = 12;
-
-      // ========================================
-      // Encoding tool
-      // ========================================
       const enc = new TextEncoder();
       const dec = new TextDecoder();
 
-      function b64encode(buf) {
-        return btoa(String.fromCharCode(...new Uint8Array(buf)));
-      }
-      function b64decode(str) {
-        return Uint8Array.from(atob(str), (c) => c.charCodeAt(0)).buffer;
-      }
+      const cryptoUtils = {
+        b64encode(buf) {
+          return btoa(String.fromCharCode(...new Uint8Array(buf)));
+        },
+        b64decode(str) {
+          return Uint8Array.from(atob(str), (c) => c.charCodeAt(0)).buffer;
+        },
+        generateOtp() {
+          const arr = new Uint8Array(8);
+          crypto.getRandomValues(arr);
+          return Array.from(arr, (x) => x % 10);
+        },
+        otpToString(nums) {
+          const first = nums.slice(0, 4).join("");
+          const second = nums.slice(4, 8).join("");
+          return `${first}-${second}`;
+        },
+        async deriveKey(passStr, salt) {
+          const keyMaterial = await crypto.subtle.importKey(
+            "raw",
+            enc.encode(passStr),
+            "PBKDF2",
+            false,
+            ["deriveKey"],
+          );
+          return crypto.subtle.deriveKey(
+            {
+              name: "PBKDF2",
+              salt,
+              iterations: CONFIG.PBKDF2_ITERS,
+              hash: "SHA-256",
+            },
+            keyMaterial,
+            { name: "AES-GCM", length: 256 },
+            false,
+            ["encrypt", "decrypt"],
+          );
+        },
+        async encryptOnce(plaintext, otpNums) {
+          const salt = crypto.getRandomValues(
+            new Uint8Array(CONFIG.SALT_BYTES),
+          );
+          const iv = crypto.getRandomValues(new Uint8Array(CONFIG.IV_BYTES));
+          const key = await this.deriveKey(this.otpToString(otpNums), salt);
+          const ct = await crypto.subtle.encrypt(
+            { name: "AES-GCM", iv },
+            key,
+            enc.encode(plaintext),
+          );
+          return [
+            "reed:v1",
+            this.b64encode(salt.buffer),
+            this.b64encode(iv.buffer),
+            this.b64encode(ct),
+          ].join(".");
+        },
+        async decryptOnce(packed, otpNums) {
+          const [ver, saltB64, ivB64, ctB64] = packed.split(".");
+          if (ver !== "reed:v1") throw new Error("Unsupported format");
+          const salt = new Uint8Array(this.b64decode(saltB64));
+          const iv = new Uint8Array(this.b64decode(ivB64));
+          const ct = this.b64decode(ctB64);
+          const key = await this.deriveKey(this.otpToString(otpNums), salt);
+          const pt = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv },
+            key,
+            ct,
+          );
+          return dec.decode(pt);
+        },
+      };
 
-      // =======================
-      // OTP
-      // =======================
-      function generateOtp() {
-        const arr = new Uint8Array(8);
-        crypto.getRandomValues(arr);
-        return Array.from(arr, (x) => x % 10);
-      }
+      const toast = (msg, type) => Alpine.store("toast").show(msg, type);
 
-      function otpToString(nums) {
-        // Format as 1234-5678 (two groups of 4 digits)
-        const first = nums.slice(0, 4).join("");
-        const second = nums.slice(4, 8).join("");
-        return `${first}-${second}`;
-      }
-
-      // =======================
-      // Key Derivation
-      // =======================
-      async function deriveKey(passStr, salt) {
-        const keyMaterial = await crypto.subtle.importKey(
-          "raw",
-          enc.encode(passStr),
-          "PBKDF2",
-          false,
-          ["deriveKey"],
-        );
-
-        return crypto.subtle.deriveKey(
-          {
-            name: "PBKDF2",
-            salt,
-            iterations: PBKDF2_ITERS,
-            hash: "SHA-256",
+      document.addEventListener("alpine:init", () => {
+        // Global Store for Toasts
+        Alpine.store("toast", {
+          items: [],
+          show(msg, type = "success") {
+            const id = Date.now();
+            const alertType =
+              type === "info"
+                ? "info"
+                : type === "warning"
+                  ? "warning"
+                  : type === "error"
+                    ? "error"
+                    : "success";
+            this.items.push({ id, message: msg, type: alertType });
+            if (this.items.length > 5) this.items.shift();
+            setTimeout(() => {
+              this.items = this.items.filter((t) => t.id !== id);
+            }, 3000);
           },
-          keyMaterial,
-          { name: "AES-GCM", length: 256 },
-          false,
-          ["encrypt", "decrypt"],
-        );
-      }
+        });
 
-      async function encryptOnce(plaintext, otpNums) {
-        const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
-        const iv = crypto.getRandomValues(new Uint8Array(IV_BYTES));
+        Alpine.data("indexPage", () => ({
+          // -- State --
+          theme: "light",
+          isLoading: false,
+          isDecrypting: false,
 
-        const key = await deriveKey(otpToString(otpNums), salt);
+          // Generate Section
+          qrGenerated: false,
+          showQr: true,
+          textInput: "",
+          showInput: true,
+          isEncryptEnabled: false,
+          currentOtp: null,
+          otpActualValue: null,
+          showOtp: false,
+          otpAutoHideTimer: null,
 
-        const ct = await crypto.subtle.encrypt(
-          { name: "AES-GCM", iv },
-          key,
-          enc.encode(plaintext),
-        );
+          // Scan Section
+          scanState: "idle", // idle, scanning, result
+          videoStream: null,
+          scanResult: "",
+          showResult: false,
+          encryptedScanResult: null,
+          showDecryptionPanel: false,
+          otpInputs: Array(8).fill(""),
+          isPrivacyOverlayVisible: false,
 
-        return [
-          "reed:v1",
-          b64encode(salt.buffer),
-          b64encode(iv.buffer),
-          b64encode(ct),
-        ].join(".");
-      }
+          // -- Computed --
+          get otpDisplay() {
+            if (!this.isEncryptEnabled) return "--";
+            return this.showOtp ? this.otpActualValue : "••••-••••";
+          },
 
-      async function decryptOnce(packed, otpNums) {
-        const [ver, saltB64, ivB64, ctB64] = packed.split(".");
-        if (ver !== "reed:v1") throw new Error("Unsupported format");
+          // -- Lifecycle --
+          init() {
+            this.initTheme();
+            this.setupThemeListener();
+          },
 
-        const salt = new Uint8Array(b64decode(saltB64));
-        const iv = new Uint8Array(b64decode(ivB64));
-        const ct = b64decode(ctB64);
-
-        const key = await deriveKey(otpToString(otpNums), salt);
-
-        const pt = await crypto.subtle.decrypt(
-          { name: "AES-GCM", iv },
-          key,
-          ct,
-        );
-
-        return dec.decode(pt);
-      }
-
-      // ========================================
-      // Security: Prevent right-click on entire page
-      // ========================================
-      document.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-        return false;
-      });
-
-      // ========================================
-      // Character counter for text input
-      // ========================================
-      const textInput = $("textInput");
-      const charCount = $("charCount");
-
-      textInput.addEventListener("input", function () {
-        charCount.textContent = textInput.value.length;
-      });
-
-      // ========================================
-      // OTP Input Auto-focus and Navigation
-      // ========================================
-      function initOtpInputs() {
-        for (let i = 0; i < 8; i++) {
-          const input = $(`otp${i}`);
-
-          // Auto-focus to next input on digit entry
-          input.addEventListener("input", function (e) {
-            const value = e.target.value;
-
-            // Only allow single digit 0-9
-            if (value.length > 1) {
-              e.target.value = value.charAt(0);
+          // -- Theme Logic --
+          initTheme() {
+            try {
+              const savedTheme = localStorage.getItem("theme");
+              if (savedTheme) {
+                this.theme = savedTheme;
+              } else {
+                this.theme = window.matchMedia("(prefers-color-scheme: dark)")
+                  .matches
+                  ? "dark"
+                  : "light";
+              }
+            } catch (e) {
+              this.theme = window.matchMedia("(prefers-color-scheme: dark)")
+                .matches
+                ? "dark"
+                : "light";
             }
+            document.documentElement.setAttribute("data-theme", this.theme);
+          },
 
-            // Validate digit
-            if (value && !/^[0-9]$/.test(value)) {
-              e.target.value = "";
+          toggleTheme() {
+            this.theme = this.theme === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-theme", this.theme);
+            try {
+              localStorage.setItem("theme", this.theme);
+            } catch (e) {}
+          },
+
+          setupThemeListener() {
+            window
+              .matchMedia("(prefers-color-scheme: dark)")
+              .addEventListener("change", (e) => {
+                try {
+                  if (!localStorage.getItem("theme")) {
+                    this.theme = e.matches ? "dark" : "light";
+                    document.documentElement.setAttribute(
+                      "data-theme",
+                      this.theme,
+                    );
+                  }
+                } catch (err) {}
+              });
+          },
+
+          // -- Generate Logic --
+          handleEncryptionToggle() {
+            if (this.isEncryptEnabled) {
+              this.currentOtp = cryptoUtils.generateOtp();
+              this.otpActualValue = cryptoUtils.otpToString(this.currentOtp);
+              this.showOtp = false;
+            } else {
+              this.currentOtp = null;
+              this.otpActualValue = null;
+              this.showOtp = false;
+              if (this.otpAutoHideTimer) {
+                clearTimeout(this.otpAutoHideTimer);
+                this.otpAutoHideTimer = null;
+              }
+            }
+          },
+
+          toggleOtpVisibility() {
+            if (!this.showOtp) {
+              this.showOtp = true;
+              if (this.otpAutoHideTimer) clearTimeout(this.otpAutoHideTimer);
+              this.otpAutoHideTimer = setTimeout(() => {
+                this.showOtp = false;
+                this.otpAutoHideTimer = null;
+              }, 5000);
+            } else {
+              this.showOtp = false;
+              if (this.otpAutoHideTimer) {
+                clearTimeout(this.otpAutoHideTimer);
+                this.otpAutoHideTimer = null;
+              }
+            }
+          },
+
+          async generateQRCode() {
+            const text = this.textInput.trim();
+            if (!text) {
+              toast("Enter content", "warning");
               return;
             }
 
-            // Auto-focus next input if digit entered
-            if (value && i < 7) {
-              $(`otp${i + 1}`).focus();
+            if (text.length > CONFIG.MAX_CHAR_COUNT) {
+              toast(
+                `Too long (${text.length}/${CONFIG.MAX_CHAR_COUNT})`,
+                "error",
+              );
+              return;
             }
-          });
 
-          // Handle backspace and navigation
-          input.addEventListener("keydown", function (e) {
-            // Backspace: clear current or move to previous
-            if (e.key === "Backspace") {
-              if (!e.target.value && i > 0) {
-                e.preventDefault();
-                $(`otp${i - 1}`).focus();
+            this.isLoading = true;
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = "";
+
+            try {
+              let contentToEncode = text;
+              if (this.isEncryptEnabled && this.currentOtp) {
+                contentToEncode = await cryptoUtils.encryptOnce(
+                  text,
+                  this.currentOtp,
+                );
               }
-            }
-            // Arrow left: move to previous
-            else if (e.key === "ArrowLeft" && i > 0) {
-              e.preventDefault();
-              $(`otp${i - 1}`).focus();
-            }
-            // Arrow right: move to next
-            else if (e.key === "ArrowRight" && i < 7) {
-              e.preventDefault();
-              $(`otp${i + 1}`).focus();
-            }
-          });
 
-          // Handle paste
-          input.addEventListener("paste", function (e) {
+              QRCode.toCanvas(
+                qrContainer,
+                contentToEncode,
+                {
+                  width: 300,
+                  margin: 4,
+                  color: { dark: "#000000", light: "#ffffff" },
+                  errorCorrectionLevel: "M",
+                },
+                (error) => {
+                  this.isLoading = false;
+                  if (error) {
+                    console.error(error);
+                    toast("Generation failed", "error");
+                    return;
+                  }
+                  this.qrGenerated = true;
+                  this.showQr = true;
+                  this.showInput = false;
+                },
+              );
+            } catch (error) {
+              this.isLoading = false;
+              console.error("Encryption error:", error);
+              toast("Encryption failed", "error");
+            }
+          },
+
+          // -- Scan Logic --
+          async startScanning() {
+            try {
+              this.videoStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                  facingMode: "environment",
+                  width: { min: 640, ideal: 1280, max: 2560 },
+                  height: { min: 640, ideal: 1280, max: 2560 },
+                },
+                audio: false,
+              });
+
+              this.$refs.video.srcObject = this.videoStream;
+              this.scanState = "scanning";
+            } catch (error) {
+              console.error("Camera access error:", error);
+              toast("Camera access denied", "error");
+            }
+          },
+
+          stopScanning() {
+            if (this.videoStream) {
+              this.videoStream.getTracks().forEach((track) => track.stop());
+              this.videoStream = null;
+            }
+            if (this.$refs.video) this.$refs.video.srcObject = null;
+            this.scanState = "idle";
+          },
+
+          captureAndDecode() {
+            const video = this.$refs.video;
+            const canvas = this.$refs.canvas;
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const context = canvas.getContext("2d", {
+              willReadFrequently: true,
+            });
+            context.filter = "contrast(120%) brightness(105%)";
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            context.filter = "none";
+
+            const imageData = context.getImageData(
+              0,
+              0,
+              canvas.width,
+              canvas.height,
+            );
+            const code = jsQR(
+              imageData.data,
+              imageData.width,
+              imageData.height,
+              {
+                inversionAttempts: "attemptBoth",
+              },
+            );
+
+            if (code) {
+              this.processScanResult(code.data);
+              this.stopScanning();
+              this.scanState = "result";
+            } else {
+              toast("Not detected, adjust angle", "warning");
+            }
+          },
+
+          handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file || !file.type.startsWith("image/")) {
+              if (file) toast("Please select an image file", "error");
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const img = new Image();
+              img.onload = () => {
+                const canvas = this.$refs.canvas;
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const context = canvas.getContext("2d", {
+                  willReadFrequently: true,
+                });
+                context.filter = "contrast(120%) brightness(105%)";
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                context.filter = "none";
+
+                const imageData = context.getImageData(
+                  0,
+                  0,
+                  canvas.width,
+                  canvas.height,
+                );
+                const code = jsQR(
+                  imageData.data,
+                  imageData.width,
+                  imageData.height,
+                  {
+                    inversionAttempts: "attemptBoth",
+                  },
+                );
+
+                if (code) {
+                  this.processScanResult(code.data);
+                  this.scanState = "result";
+                  toast("QR code recognized!", "success");
+                } else {
+                  toast("No QR code found in image", "warning");
+                }
+              };
+              img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            event.target.value = "";
+          },
+
+          processScanResult(data) {
+            this.isPrivacyOverlayVisible = true;
+            if (data.startsWith("reed:v1.")) {
+              this.encryptedScanResult = data;
+              this.showDecryptionPanel = true;
+              this.scanResult = "";
+              this.showResult = false;
+            } else {
+              this.scanResult = data;
+              this.showResult = false;
+              this.showDecryptionPanel = false;
+            }
+          },
+
+          async decryptResult() {
+            if (!this.encryptedScanResult) return;
+
+            if (this.otpInputs.some((d) => !d)) {
+              toast("Enter all 8 digits", "warning");
+              return;
+            }
+
+            this.isDecrypting = true;
+            try {
+              const otpNums = this.otpInputs.map((d) => parseInt(d, 10));
+              const decryptedText = await cryptoUtils.decryptOnce(
+                this.encryptedScanResult,
+                otpNums,
+              );
+
+              this.scanResult = decryptedText;
+              this.showResult = false;
+              this.showDecryptionPanel = false;
+              this.otpInputs = Array(8).fill("");
+              toast("Decrypted!", "success");
+            } catch (error) {
+              console.error("Decryption error:", error);
+              toast("Decryption failed. Check OTP", "error");
+            } finally {
+              this.isDecrypting = false;
+            }
+          },
+
+          // -- OTP Inputs Logic --
+          handleOtpInput(e, index) {
+            const val = e.target.value;
+            if (val.length > 1) {
+              this.otpInputs[index] = val.charAt(0);
+            }
+            if (
+              this.otpInputs[index] &&
+              !/^[0-9]$/.test(this.otpInputs[index])
+            ) {
+              this.otpInputs[index] = "";
+              return;
+            }
+            if (this.otpInputs[index] && index < 7) {
+              document.getElementById(`otp-${index + 1}`).focus();
+            }
+          },
+
+          handleOtpKeydown(e, index) {
+            if (e.key === "Backspace") {
+              if (!this.otpInputs[index] && index > 0) {
+                document.getElementById(`otp-${index - 1}`).focus();
+              }
+            } else if (e.key === "ArrowLeft" && index > 0) {
+              document.getElementById(`otp-${index - 1}`).focus();
+            } else if (e.key === "ArrowRight" && index < 7) {
+              document.getElementById(`otp-${index + 1}`).focus();
+            }
+          },
+
+          handleOtpPaste(e) {
             e.preventDefault();
             const pastedData = e.clipboardData.getData("text").trim();
-
-            // Remove dashes and spaces
             const digits = pastedData.replace(/[-\s]/g, "");
-
-            // Validate and fill inputs
             if (/^\d{8}$/.test(digits)) {
-              for (let j = 0; j < 8; j++) {
-                $(`otp${j}`).value = digits.charAt(j);
+              for (let i = 0; i < 8; i++) {
+                this.otpInputs[i] = digits.charAt(i);
               }
-              $("otp7").focus();
+              document.getElementById("otp-7").focus();
             }
-          });
-        }
-      }
+          },
 
-      // Initialize OTP inputs
-      initOtpInputs();
+          copyResult() {
+            if (!this.scanResult) return;
+            navigator.clipboard
+              .writeText(this.scanResult)
+              .then(() => toast("Copied!", "success"))
+              .catch(() => {
+                const textArea = document.createElement("textarea");
+                textArea.value = this.scanResult;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                toast("Copied!", "success");
+              });
+          },
 
-      // ========================================
-      // Cleanup on page unload
-      // ========================================
-      window.addEventListener("beforeunload", function () {
-        if (videoStream) {
-          videoStream.getTracks().forEach((track) => track.stop());
-        }
+          resetPage() {
+            window.location.reload();
+          },
+        }));
       });
-
-      // ========================================
-      // Theme Toggle Functionality
-      // ========================================
-      function getPreferredTheme() {
-        // Check localStorage first (with Safari private mode protection)
-        try {
-          const savedTheme = localStorage.getItem("theme");
-          if (savedTheme) {
-            return savedTheme;
-          }
-        } catch (e) {
-          // Safari private mode or localStorage disabled
-          console.warn("localStorage not available:", e.name);
-        }
-
-        // Fall back to system preference
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-      }
-
-      function setTheme(theme) {
-        document.documentElement.setAttribute("data-theme", theme);
-
-        // Save to localStorage (with Safari private mode protection)
-        try {
-          localStorage.setItem("theme", theme);
-        } catch (e) {
-          // Safari private mode: QuotaExceededError
-          // User can still switch themes, just won't persist on refresh
-          console.warn("localStorage not available:", e.name);
-        }
-
-        // Update icon
-        const icon = $("themeIcon");
-        icon.textContent = theme === "dark" ? "☀️" : "🌙";
-      }
-
-      function toggleTheme() {
-        const currentTheme =
-          document.documentElement.getAttribute("data-theme") ||
-          getPreferredTheme();
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-        setTheme(newTheme);
-      }
-
-      // Initialize theme on page load
-      (function initTheme() {
-        const theme = getPreferredTheme();
-        setTheme(theme);
-      })();
-
-      // Listen for system theme changes
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", (e) => {
-          // Only auto-switch if user hasn't manually set a preference
-          let hasManualTheme = false;
-          try {
-            hasManualTheme = !!localStorage.getItem("theme");
-          } catch (e) {
-            // Safari private mode or localStorage disabled
-            console.warn("localStorage not available:", e.name);
-          }
-
-          if (!hasManualTheme) {
-            setTheme(e.matches ? "dark" : "light");
-          }
-        });
     </script>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast hidden"></div>
   </body>
 </html>

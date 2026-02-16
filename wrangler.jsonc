@@ -2,6 +2,6 @@
   "name": "reed",
   "compatibility_date": "2026-01-19",
   "assets": {
-    "directory": "./"
+    "directory": "./dist"
   }
 }
